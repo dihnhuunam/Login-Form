@@ -11,6 +11,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set (RESOURCES resources.qrc)
+
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
 add_executable(Login-Form
@@ -18,6 +20,7 @@ add_executable(Login-Form
   mainwindow.cpp
   mainwindow.h
   mainwindow.ui
+  ${RESOURCES}
 )
 
 target_link_libraries(Login-Form PRIVATE Qt5::Widgets)
