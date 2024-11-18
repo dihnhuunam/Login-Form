@@ -5,7 +5,7 @@
 #include <QFile>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow)
+    : QMainWindow(parent), ui(new Ui::MainWindow), backgroundLabel(nullptr)
 {
     ui->setupUi(this);
 
@@ -19,8 +19,19 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+    QMainWindow::resizeEvent(event);
+
+    if (backgroundLabel)
+    {
+        backgroundLabel->setGeometry(this->rect());
+    }
+}
+
 void MainWindow::setupStyles()
 {
+    // Tải tệp QSS
     QFile styleFile(":/style.qss");
     if (styleFile.open(QFile::ReadOnly))
     {
@@ -29,6 +40,19 @@ void MainWindow::setupStyles()
         styleFile.close();
     }
 
+    // Tạo QLabel để làm hình nền
+    backgroundLabel = new QLabel(this);
+    backgroundLabel->setPixmap(QPixmap(":/Images/background.jpg"));
+    backgroundLabel->setScaledContents(true); // Đảm bảo hình nền bao phủ toàn bộ
+    backgroundLabel->setGeometry(this->rect());
+    backgroundLabel->lower(); // Đưa QLabel xuống dưới cùng
+
+    // Tạo hiệu ứng làm mờ
+    QGraphicsBlurEffect *blurEffect = new QGraphicsBlurEffect(this);
+    blurEffect->setBlurRadius(15); // Điều chỉnh độ mờ (giá trị càng cao càng mờ)
+    backgroundLabel->setGraphicsEffect(blurEffect);
+
+    // Cấu hình các widget khác
     ui->loginLabel->setText(QString::fromUtf8("Đăng Nhập"));
     ui->loginLabel->setAlignment(Qt::AlignCenter);
 
@@ -48,6 +72,12 @@ void MainWindow::setupStyles()
 
 void MainWindow::setupLayout()
 {
+    // Xóa layout cũ nếu có
+    if (ui->centralwidget->layout())
+    {
+        delete ui->centralwidget->layout();
+    }
+
     QVBoxLayout *mainLayout = new QVBoxLayout();
 
     QHBoxLayout *hLayout = new QHBoxLayout();
