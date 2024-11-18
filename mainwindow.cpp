@@ -5,8 +5,7 @@
 #include <QFile>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
@@ -23,7 +22,8 @@ MainWindow::~MainWindow()
 void MainWindow::setupStyles()
 {
     QFile styleFile(":/style.qss");
-    if (styleFile.open(QFile::ReadOnly)) {
+    if (styleFile.open(QFile::ReadOnly))
+    {
         QString style = QString::fromUtf8(styleFile.readAll());
         this->setStyleSheet(style);
         styleFile.close();
@@ -83,7 +83,7 @@ void MainWindow::on_loginButton_clicked()
     QString successColor = "#6BBF59";
     QString errorColor = "#FF6B6B";
 
-    if(username == "test" && password == "test")
+    if (username == "test" && password == "test")
     {
         ui->statusLabel->setVisible(true);
         ui->statusLabel->setStyleSheet(QString("color: %1;").arg(successColor));
