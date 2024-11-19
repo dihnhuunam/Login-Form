@@ -13,9 +13,7 @@ find_package(Qt5 COMPONENTS Widgets REQUIRED)
 set(PROJECT_SOURCES
     Sources/main.cpp
     Sources/mainwindow.cpp
-    Sources/AnimatedLineEdit.cpp
     Includes/mainwindow.h
-    Includes/AnimatedLineEdit.h
     Resources.qrc 
 )
 
