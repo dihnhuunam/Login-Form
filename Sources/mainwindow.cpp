@@ -29,6 +29,39 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     }
 }
 
+void MainWindow::setupLayout()
+{
+    // Initialize container
+    QWidget *container = new QWidget();
+
+    // Initialize hLayout for centralWidget
+    QHBoxLayout *hLayout = new QHBoxLayout(ui->centralWidget);
+    // Initialize vLayout for container
+    QVBoxLayout *vLayout = new QVBoxLayout(container);
+
+    // Initilize SpacerItem for responsive
+    QSpacerItem *vSpacerTop = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+    QSpacerItem *vSpacerBottom = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+    QSpacerItem *hSpacerLeft = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+    QSpacerItem *hSpacerRight = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+    // Vertical layout container
+    vLayout->addItem(vSpacerTop);
+    vLayout->addWidget(ui->loginLabel);
+    vLayout->addWidget(ui->usernameLineEdit);
+    vLayout->addWidget(ui->passwordLineEdit);
+    vLayout->addWidget(ui->loginButton);
+    vLayout->addWidget(ui->statusLabel);
+    vLayout->addItem(vSpacerBottom);
+
+    // Horizontal layout centralWidget
+    hLayout->addItem(hSpacerLeft);
+    hLayout->addWidget(container);
+    hLayout->addItem(hSpacerRight);
+
+    ui->centralWidget->setLayout(hLayout);
+}
+
 void MainWindow::setupStyles()
 {
     // Tải tệp QSS
@@ -68,36 +101,6 @@ void MainWindow::setupStyles()
 
     ui->statusLabel->setVisible(false);
     ui->statusLabel->setAlignment(Qt::AlignCenter);
-}
-
-void MainWindow::setupLayout()
-{
-    // Xóa layout cũ nếu có
-    if (ui->centralwidget->layout())
-    {
-        delete ui->centralwidget->layout();
-    }
-
-    QVBoxLayout *mainLayout = new QVBoxLayout();
-
-    QHBoxLayout *hLayout = new QHBoxLayout();
-    QVBoxLayout *vLayout = new QVBoxLayout();
-
-    vLayout->addWidget(ui->loginLabel);
-    vLayout->addWidget(ui->usernameLineEdit);
-    vLayout->addWidget(ui->passwordLineEdit);
-    vLayout->addWidget(ui->loginButton);
-    vLayout->addWidget(ui->statusLabel);
-
-    hLayout->addSpacerItem(new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum));
-    hLayout->addLayout(vLayout);
-    hLayout->addSpacerItem(new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum));
-
-    mainLayout->addSpacerItem(new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding));
-    mainLayout->addLayout(hLayout);
-    mainLayout->addSpacerItem(new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding));
-
-    ui->centralwidget->setLayout(mainLayout);
 }
 
 void MainWindow::setupConnections()

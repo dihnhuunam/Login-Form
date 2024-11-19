@@ -4,6 +4,10 @@
 } */
 
 
+QGroupBox {
+    
+}
+
 /* QLabel style for the login label */
 QLabel#loginLabel {
     color: #999;
