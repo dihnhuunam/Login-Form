@@ -89,8 +89,9 @@ void MainWindow::setupStyles()
     backgroundLabel->setGeometry(this->rect());
     backgroundLabel->lower();
 
+    // Apply blur effect to the background label
     QGraphicsBlurEffect *blurEffect = new QGraphicsBlurEffect(this);
-    blurEffect->setBlurRadius(15);
+    blurEffect->setBlurRadius(1); // Adjust blur radius as needed
     backgroundLabel->setGraphicsEffect(blurEffect);
 
     // Widget text and styles
@@ -105,6 +106,9 @@ void MainWindow::setupStyles()
     passwordLineEdit->setEchoMode(QLineEdit::Password);
 
     loginButton->setText(QString::fromUtf8("Đăng Nhập"));
+
+    statusLabel->setVisible(false);
+    statusLabel->setAlignment(Qt::AlignCenter);
 }
 
 void MainWindow::setupConnections()

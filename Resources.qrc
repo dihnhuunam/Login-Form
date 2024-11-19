@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>Style.qss</file>
         <file>Images/background.jpg</file>
+        <file>Images/background.png</file>
     </qresource>
 </RCC>

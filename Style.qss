@@ -1,10 +1,11 @@
 /* QWidget style for container login form */
 QWidget#container {
-    background-color: #2C2C2C; 
+    background-color: rgba(44, 44, 44, 220); 
     border: 1px solid #444; 
     border-radius: 15px;
 }
 
+/* QLineEdit and QPushButton common styles */
 QLineEdit, QPushButton {
     min-width: 200px;
     height: 30px;
@@ -45,7 +46,7 @@ QPushButton:pressed {
 
 /* QLabel style for the status label */
 QLabel#statusLabel {
-    color: #FFFFFF; /* White text for better visibility */
+    color: #FFFFFF; 
     font-size: 14px;
     font-weight: bold;
 }
