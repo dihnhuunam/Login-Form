@@ -1,28 +1,22 @@
 #include "mainwindow.h"
-#include "./ui_mainwindow.h"
-#include <QString>
-#include <QtWidgets>
 #include <QFile>
+#include <QGraphicsBlurEffect>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow), backgroundLabel(nullptr)
+    : QMainWindow(parent), container(nullptr), backgroundLabel(nullptr),
+      statusLabel(nullptr), loginLabel(nullptr), usernameLineEdit(nullptr),
+      passwordLineEdit(nullptr), loginButton(nullptr)
 {
-    ui->setupUi(this);
-
-    setupStyles();
     setupLayout();
+    setupStyles();
     setupConnections();
-}
-
-MainWindow::~MainWindow()
-{
-    delete ui;
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
     QMainWindow::resizeEvent(event);
-
     if (backgroundLabel)
     {
         backgroundLabel->setGeometry(this->rect());
@@ -31,9 +25,12 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 
 void MainWindow::setupLayout()
 {
-    QWidget *container = new QWidget(ui->centralWidget);
-    container->setObjectName(QString::fromUtf8("container"));
+    // Central widget setup
+    QWidget *centralWidget = new QWidget(this);
+    this->setCentralWidget(centralWidget);
 
+    container = new QWidget(centralWidget);
+    container->setObjectName("container");
     container->setMinimumSize(400, 300);
     container->setMaximumSize(600, 400);
 
@@ -41,23 +38,42 @@ void MainWindow::setupLayout()
     vLayout->setSpacing(15);
     vLayout->setContentsMargins(20, 20, 20, 20);
 
-    vLayout->addWidget(ui->loginLabel);
-    vLayout->addWidget(ui->usernameLineEdit);
-    vLayout->addWidget(ui->passwordLineEdit);
-    vLayout->addWidget(ui->loginButton);
-    vLayout->addWidget(ui->statusLabel);
+    // Login label
+    loginLabel = new QLabel(container);
+    loginLabel->setObjectName("loginLabel");
+    vLayout->addWidget(loginLabel);
 
-    QHBoxLayout *mainLayout = new QHBoxLayout(ui->centralWidget);
+    // Username line edit
+    usernameLineEdit = new QLineEdit(container);
+    usernameLineEdit->setObjectName("usernameLineEdit");
+    vLayout->addWidget(usernameLineEdit);
+
+    // Password line edit
+    passwordLineEdit = new QLineEdit(container);
+    passwordLineEdit->setObjectName("passwordLineEdit");
+    vLayout->addWidget(passwordLineEdit);
+
+    // Login button
+    loginButton = new QPushButton(container);
+    loginButton->setObjectName("loginButton");
+    vLayout->addWidget(loginButton);
+
+    // Status label
+    statusLabel = new QLabel(container);
+    statusLabel->setObjectName("statusLabel");
+    statusLabel->setVisible(false);
+    vLayout->addWidget(statusLabel);
+
+    QHBoxLayout *mainLayout = new QHBoxLayout(centralWidget);
     mainLayout->setContentsMargins(0, 0, 0, 0);
     mainLayout->addStretch();
     mainLayout->addWidget(container);
     mainLayout->addStretch();
-
-    ui->centralWidget->setLayout(mainLayout);
 }
 
 void MainWindow::setupStyles()
 {
+    // Load styles from file
     QFile styleFile(":/Style.qss");
     if (styleFile.open(QFile::ReadOnly))
     {
@@ -66,56 +82,55 @@ void MainWindow::setupStyles()
         styleFile.close();
     }
 
+    // Background setup
     backgroundLabel = new QLabel(this);
     backgroundLabel->setPixmap(QPixmap(":/Images/background.jpg"));
     backgroundLabel->setScaledContents(true);
     backgroundLabel->setGeometry(this->rect());
     backgroundLabel->lower();
 
-    // QGraphicsBlurEffect *blurEffect = new QGraphicsBlurEffect(this);
-    // blurEffect->setBlurRadius(15);
-    // backgroundLabel->setGraphicsEffect(blurEffect);
+    QGraphicsBlurEffect *blurEffect = new QGraphicsBlurEffect(this);
+    blurEffect->setBlurRadius(15);
+    backgroundLabel->setGraphicsEffect(blurEffect);
 
-    ui->loginLabel->setText(QString::fromUtf8("Đăng Nhập"));
-    ui->loginLabel->setAlignment(Qt::AlignCenter);
+    // Widget text and styles
+    loginLabel->setText(QString::fromUtf8("Đăng Nhập"));
+    loginLabel->setAlignment(Qt::AlignCenter);
 
-    ui->usernameLineEdit->setPlaceholderText("Tài Khoản");
-    ui->usernameLineEdit->setAlignment(Qt::AlignLeft);
-    ui->usernameLineEdit->setFocus();
+    usernameLineEdit->setPlaceholderText("Tài Khoản");
+    usernameLineEdit->setAlignment(Qt::AlignLeft);
 
-    ui->passwordLineEdit->setPlaceholderText("Mật Khẩu");
-    ui->passwordLineEdit->setAlignment(Qt::AlignLeft);
-    ui->passwordLineEdit->setEchoMode(QLineEdit::Password);
+    passwordLineEdit->setPlaceholderText("Mật Khẩu");
+    passwordLineEdit->setAlignment(Qt::AlignLeft);
+    passwordLineEdit->setEchoMode(QLineEdit::Password);
 
-    ui->loginButton->setText(QString::fromUtf8("Đăng Nhập"));
-
-    ui->statusLabel->setVisible(false);
-    ui->statusLabel->setAlignment(Qt::AlignCenter);
+    loginButton->setText(QString::fromUtf8("Đăng Nhập"));
 }
 
 void MainWindow::setupConnections()
 {
-    connect(ui->usernameLineEdit, &QLineEdit::returnPressed, this, &MainWindow::on_loginButton_clicked);
-    connect(ui->passwordLineEdit, &QLineEdit::returnPressed, this, &MainWindow::on_loginButton_clicked);
+    connect(usernameLineEdit, &QLineEdit::returnPressed, this, &MainWindow::on_loginButton_clicked);
+    connect(passwordLineEdit, &QLineEdit::returnPressed, this, &MainWindow::on_loginButton_clicked);
+    connect(loginButton, &QPushButton::clicked, this, &MainWindow::on_loginButton_clicked);
 }
 
 void MainWindow::on_loginButton_clicked()
 {
-    QString username = ui->usernameLineEdit->text();
-    QString password = ui->passwordLineEdit->text();
+    QString username = usernameLineEdit->text();
+    QString password = passwordLineEdit->text();
     QString successColor = "#6BBF59";
     QString errorColor = "#FF6B6B";
 
     if (username == "test" && password == "test")
     {
-        ui->statusLabel->setVisible(true);
-        ui->statusLabel->setStyleSheet(QString("color: %1;").arg(successColor));
-        ui->statusLabel->setText("Đăng nhập thành công.");
+        statusLabel->setVisible(true);
+        statusLabel->setStyleSheet(QString("color: %1;").arg(successColor));
+        statusLabel->setText("Đăng nhập thành công.");
     }
     else
     {
-        ui->statusLabel->setVisible(true);
-        ui->statusLabel->setStyleSheet(QString("color: %1;").arg(errorColor));
-        ui->statusLabel->setText("Đăng nhập thất bại.");
+        statusLabel->setVisible(true);
+        statusLabel->setStyleSheet(QString("color: %1;").arg(errorColor));
+        statusLabel->setText("Đăng nhập thất bại.");
     }
 }

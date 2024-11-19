@@ -3,14 +3,10 @@
 
 #include <QMainWindow>
 #include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QVBoxLayout>
 #include <QGraphicsBlurEffect>
-
-QT_BEGIN_NAMESPACE
-namespace Ui
-{
-    class MainWindow;
-}
-QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
 {
@@ -18,14 +14,19 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
 
 private:
-    Ui::MainWindow *ui;
     QLabel *backgroundLabel;
+    QWidget *container;
+    QLabel *statusLabel;
+    QLabel *loginLabel;
+    QLineEdit *usernameLineEdit;
+    QLineEdit *passwordLineEdit;
+    QPushButton *loginButton;
+
     void setupStyles();
     void setupLayout();
     void setupConnections();
