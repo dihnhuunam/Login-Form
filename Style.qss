@@ -19,6 +19,19 @@ QLabel#loginLabel {
     font-weight: bold;
 }
 
+/* QLabel style for the username and password label */
+QLabel#usernameLabel {
+    color: #FFFFFF; 
+    font-size: 20px;
+    font-weight: bold;
+}
+
+QLabel#passwordLabel {
+    color: #FFFFFF; 
+    font-size: 20px;
+    font-weight: bold;
+}
+
 /* QLineEdit style */
 QLineEdit {
     background-color: #444; 

@@ -3,10 +3,12 @@
 #include <QGraphicsBlurEffect>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), container(nullptr), backgroundLabel(nullptr),
-      statusLabel(nullptr), loginLabel(nullptr), usernameLineEdit(nullptr),
+      statusLabel(nullptr), loginLabel(nullptr), usernameLabel(nullptr),
+      passwordLabel(nullptr), usernameLineEdit(nullptr),
       passwordLineEdit(nullptr), loginButton(nullptr)
 {
     setupLayout();
@@ -43,10 +45,24 @@ void MainWindow::setupLayout()
     loginLabel->setObjectName("loginLabel");
     vLayout->addWidget(loginLabel);
 
+    // Username label
+    usernameLabel = new QLabel(container);
+    usernameLabel->setObjectName("usernameLabel");
+    usernameLabel->setText("Tài Khoản");
+    usernameLabel->setVisible(false);
+    vLayout->addWidget(usernameLabel);
+
     // Username line edit
     usernameLineEdit = new QLineEdit(container);
     usernameLineEdit->setObjectName("usernameLineEdit");
     vLayout->addWidget(usernameLineEdit);
+
+    // Password label
+    passwordLabel = new QLabel(container);
+    passwordLabel->setObjectName("passwordLabel");
+    passwordLabel->setText("Mật Khẩu");
+    passwordLabel->setVisible(false);
+    vLayout->addWidget(passwordLabel);
 
     // Password line edit
     passwordLineEdit = new QLineEdit(container);
@@ -116,25 +132,106 @@ void MainWindow::setupConnections()
     connect(usernameLineEdit, &QLineEdit::returnPressed, this, &MainWindow::on_loginButton_clicked);
     connect(passwordLineEdit, &QLineEdit::returnPressed, this, &MainWindow::on_loginButton_clicked);
     connect(loginButton, &QPushButton::clicked, this, &MainWindow::on_loginButton_clicked);
+
+    // Install event filter for focus events
+    usernameLineEdit->installEventFilter(this);
+    passwordLineEdit->installEventFilter(this);
+}
+
+void MainWindow::handleUsernameFocusIn()
+{
+    if (usernameLabel)
+    {
+        usernameLabel->setVisible(true);
+        usernameLineEdit->setPlaceholderText("");
+    }
+}
+
+void MainWindow::handlePasswordFocusIn()
+{
+    if (passwordLabel)
+    {
+        passwordLabel->setVisible(true);
+        passwordLineEdit->setPlaceholderText("");
+    }
+}
+
+void MainWindow::handleUsernameFocusOut()
+{
+    if (usernameLabel && usernameLineEdit)
+    {
+        if (usernameLineEdit->text().isEmpty())
+        {
+            usernameLabel->setVisible(false);
+            usernameLineEdit->setPlaceholderText("Tài khoản");
+        }
+    }
+}
+
+void MainWindow::handlePasswordFocusOut()
+{
+    if (passwordLabel && passwordLineEdit)
+    {
+        if (passwordLineEdit->text().isEmpty())
+        {
+            passwordLabel->setVisible(false);
+            passwordLineEdit->setPlaceholderText("Mật khẩu");
+        }
+    }
 }
 
 void MainWindow::on_loginButton_clicked()
 {
-    QString username = usernameLineEdit->text();
+    QString username = usernameLineEdit->text().trimmed();
     QString password = passwordLineEdit->text();
     QString successColor = "#6BBF59";
     QString errorColor = "#FF6B6B";
 
+    if (username.isEmpty() || password.isEmpty())
+    {
+        statusLabel->setVisible(true);
+        statusLabel->setStyleSheet(QString("color: %1").arg(errorColor));
+        statusLabel->setText("Vui lòng nhập đầy đủ thông tin!");
+        return;
+    }
+
     if (username == "test" && password == "test")
     {
         statusLabel->setVisible(true);
-        statusLabel->setStyleSheet(QString("color: %1;").arg(successColor));
+        statusLabel->setStyleSheet(QString("color: %1").arg(successColor));
         statusLabel->setText("Đăng nhập thành công.");
     }
     else
     {
         statusLabel->setVisible(true);
-        statusLabel->setStyleSheet(QString("color: %1;").arg(errorColor));
+        statusLabel->setStyleSheet(QString("color: %1").arg(errorColor));
         statusLabel->setText("Đăng nhập thất bại.");
     }
+}
+
+bool MainWindow::eventFilter(QObject *watched, QEvent *event)
+{
+    if (watched == usernameLineEdit)
+    {
+        if (event->type() == QEvent::FocusIn)
+        {
+            handleUsernameFocusIn();
+        }
+        else if (event->type() == QEvent::FocusOut)
+        {
+            handleUsernameFocusOut();
+        }
+    }
+    else if (watched == passwordLineEdit)
+    {
+        if (event->type() == QEvent::FocusIn)
+        {
+            handlePasswordFocusIn();
+        }
+        else if (event->type() == QEvent::FocusOut)
+        {
+            handlePasswordFocusOut();
+        }
+    }
+    return QMainWindow::eventFilter(watched, event);
 }
