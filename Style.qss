@@ -15,46 +15,56 @@ QLineEdit, QPushButton {
 /* QLabel style for the login label */
 QLabel#loginLabel {
     color: #FFFFFF; 
-    font-size: 38px;
+    font-size: 35px;
     font-weight: bold;
+    /* border:1px solid red; */
 }
 
 /* QLabel style for the username and password label */
 QLabel#usernameLabel {
     color: #FFFFFF; 
-    font-size: 20px;
+    font-size: 25px;
     font-weight: bold;
+    /* border:1px solid blue; */
 }
 
 QLabel#passwordLabel {
     color: #FFFFFF; 
-    font-size: 20px;
+    font-size: 25px;
     font-weight: bold;
+    /* border:1px solid green; */
 }
 
 /* QLineEdit style */
-QLineEdit {
+QLineEdit#usernameLineEdit {
     background-color: #444; 
     color: #FFFFFF; 
-    border: 1px solid #666; 
+    /* border: 1px solid #cyan;  */
     padding: 6px;
 }
 
+QLineEdit#passwordLineEdit{
+    background-color: #444; 
+    color: #FFFFFF; 
+    border: 1px solid #666; 
+    /* border: 1px solid #cyan;  */
+    padding: 6px;
+}
 /* QPushButton style */
-QPushButton {
+QPushButton#loginButton{
     background-color: #555; 
     color: #FFFFFF; 
     border: 1px solid #777; 
     padding: 6px;
 }
 
-QPushButton:hover {
+QPushButton#loginButton:hover {
     background-color: #777; 
     color: #000000; 
 }
 
-QPushButton:pressed {
-    background-color: #888; /* Slightly lighter gray when pressed */
+QPushButton#loginButton:pressed {
+    background-color: #888; 
 }
 
 /* QLabel style for the status label */

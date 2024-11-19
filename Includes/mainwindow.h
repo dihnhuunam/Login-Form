@@ -2,12 +2,13 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QWidget>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
-#include <QResizeEvent>
 #include <QGraphicsOpacityEffect>
 #include <QPropertyAnimation>
+#include <QResizeEvent>
 
 class MainWindow : public QMainWindow
 {
@@ -15,10 +16,12 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget *parent = nullptr);
+    ~MainWindow();
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
     bool eventFilter(QObject *watched, QEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
 
 private slots:
     void on_loginButton_clicked();
@@ -33,6 +36,8 @@ private:
     void setupConnections();
     void setupAnimations();
 
+    // Base Widgets
+    QWidget *centralWidget;
     QWidget *container;
     QLabel *backgroundLabel;
     QLabel *statusLabel;
@@ -43,7 +48,7 @@ private:
     QLineEdit *passwordLineEdit;
     QPushButton *loginButton;
 
-    // Animation related members
+    // Aminations
     QGraphicsOpacityEffect *usernameLabelEffect;
     QGraphicsOpacityEffect *passwordLabelEffect;
     QPropertyAnimation *usernameAnimation;
