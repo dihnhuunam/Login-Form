@@ -20,8 +20,8 @@ set(PROJECT_SOURCES
     Forms/mainwindow.ui
 )
 
-if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/resources.qrc)
-    set(PROJECT_SOURCES ${PROJECT_SOURCES} resources.qrc)
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/Resources.qrc)
+    set(PROJECT_SOURCES ${PROJECT_SOURCES} Resources.qrc)
 endif()
 
 add_executable(Login-Form ${PROJECT_SOURCES})

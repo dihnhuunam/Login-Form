@@ -31,41 +31,34 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 
 void MainWindow::setupLayout()
 {
-    // Initialize container
-    QWidget *container = new QWidget();
+    QWidget *container = new QWidget(ui->centralWidget);
+    container->setObjectName(QString::fromUtf8("container"));
 
-    // Initialize hLayout for centralWidget
-    QHBoxLayout *hLayout = new QHBoxLayout(ui->centralWidget);
-    // Initialize vLayout for container
+    container->setMinimumSize(400, 300);
+    container->setMaximumSize(600, 400);
+
     QVBoxLayout *vLayout = new QVBoxLayout(container);
+    vLayout->setSpacing(15);
+    vLayout->setContentsMargins(20, 20, 20, 20);
 
-    // Initilize SpacerItem for responsive
-    QSpacerItem *vSpacerTop = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-    QSpacerItem *vSpacerBottom = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-    QSpacerItem *hSpacerLeft = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-    QSpacerItem *hSpacerRight = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-    // Vertical layout container
-    vLayout->addItem(vSpacerTop);
     vLayout->addWidget(ui->loginLabel);
     vLayout->addWidget(ui->usernameLineEdit);
     vLayout->addWidget(ui->passwordLineEdit);
     vLayout->addWidget(ui->loginButton);
     vLayout->addWidget(ui->statusLabel);
-    vLayout->addItem(vSpacerBottom);
 
-    // Horizontal layout centralWidget
-    hLayout->addItem(hSpacerLeft);
-    hLayout->addWidget(container);
-    hLayout->addItem(hSpacerRight);
+    QHBoxLayout *mainLayout = new QHBoxLayout(ui->centralWidget);
+    mainLayout->setContentsMargins(0, 0, 0, 0);
+    mainLayout->addStretch();
+    mainLayout->addWidget(container);
+    mainLayout->addStretch();
 
-    ui->centralWidget->setLayout(hLayout);
+    ui->centralWidget->setLayout(mainLayout);
 }
 
 void MainWindow::setupStyles()
 {
-    // Tải tệp QSS
-    QFile styleFile(":/style.qss");
+    QFile styleFile(":/Style.qss");
     if (styleFile.open(QFile::ReadOnly))
     {
         QString style = QString::fromUtf8(styleFile.readAll());
@@ -73,19 +66,16 @@ void MainWindow::setupStyles()
         styleFile.close();
     }
 
-    // Tạo QLabel để làm hình nền
     backgroundLabel = new QLabel(this);
     backgroundLabel->setPixmap(QPixmap(":/Images/background.jpg"));
-    backgroundLabel->setScaledContents(true); // Đảm bảo hình nền bao phủ toàn bộ
+    backgroundLabel->setScaledContents(true);
     backgroundLabel->setGeometry(this->rect());
-    backgroundLabel->lower(); // Đưa QLabel xuống dưới cùng
+    backgroundLabel->lower();
 
-    // Tạo hiệu ứng làm mờ
-    QGraphicsBlurEffect *blurEffect = new QGraphicsBlurEffect(this);
-    blurEffect->setBlurRadius(15); // Điều chỉnh độ mờ (giá trị càng cao càng mờ)
-    backgroundLabel->setGraphicsEffect(blurEffect);
+    // QGraphicsBlurEffect *blurEffect = new QGraphicsBlurEffect(this);
+    // blurEffect->setBlurRadius(15);
+    // backgroundLabel->setGraphicsEffect(blurEffect);
 
-    // Cấu hình các widget khác
     ui->loginLabel->setText(QString::fromUtf8("Đăng Nhập"));
     ui->loginLabel->setAlignment(Qt::AlignCenter);
 

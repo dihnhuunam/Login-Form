@@ -1,11 +1,12 @@
-/* Mainwindow background */
-/* QMainWindow {
-    background-image: url(:/Images/background.jpg);
-} */
+QWidget#container {
+    /* background-color: rgba(255, 255, 255, 0.9); */
+    border: 1px solid #999;
+    border-radius: 8px;
+}
 
-
-QGroupBox {
-    
+QLineEdit, QPushButton {
+    min-width: 200px;
+    height: 30px;
 }
 
 /* QLabel style for the login label */
