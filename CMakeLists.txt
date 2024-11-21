@@ -30,8 +30,8 @@ include(CPack)
 
 set(CPACK_PACKAGE_NAME "Login-Form")
 set(CPACK_PACKAGE_VERSION "1.0.0")
-set(CPACK_PACKAGE_DESCRIPTION "A brief description of your project.")
-set(CPACK_PACKAGE_VENDOR "YourCompanyName")
+set(CPACK_PACKAGE_DESCRIPTION "A Basic Login Form.")
+set(CPACK_PACKAGE_VENDOR "DinhHuuNam")
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/License.txt")
 set(CPACK_GENERATOR "ZIP;DEB")
 
