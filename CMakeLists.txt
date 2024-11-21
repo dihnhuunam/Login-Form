@@ -26,9 +26,23 @@ target_include_directories(Login-Form PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Forms
 )
 
-include(InstallRequiredSystemLibraries)
-set(CPACK_PACKAGE_VERSION_MAJOR "${Tutorial_VERSION_MAJOR}")
-set(CPACK_PACKAGE_VERSION_MINOR "${Tutorial_VERSION_MINOR}")
-set(CPACK_GENERATOR "TGZ")
-set(CPACK_SOURCE_GENERATOR "TGZ")
+
 include(CPack)
+set(CPACK_PACKAGE_NAME "Login-Form")
+set(CPACK_PACKAGE_VERSION "1.0.0")
+set(CPACK_PACKAGE_DESCRIPTION "A Basic Login Form.")
+set(CPACK_PACKAGE_VENDOR "DinhHuuNam")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/License.txt")
+set(CPACK_GENERATOR "ZIP;DEB")
+
+install(TARGETS Login-Form
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib)
+
+# include(InstallRequiredSystemLibraries)
+# set(CPACK_PACKAGE_VERSION_MAJOR "${Tutorial_VERSION_MAJOR}")
+# set(CPACK_PACKAGE_VERSION_MINOR "${Tutorial_VERSION_MINOR}")
+# set(CPACK_GENERATOR "TGZ")
+# set(CPACK_SOURCE_GENERATOR "TGZ")
+# include(CPack)
