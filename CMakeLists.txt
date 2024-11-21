@@ -16,7 +16,7 @@ set(PROJECT_SOURCES
     Includes/mainwindow.h
     Resources.qrc 
 )
-
+    
 add_executable(Login-Form ${PROJECT_SOURCES})
 
 target_link_libraries(Login-Form PRIVATE Qt5::Widgets)
@@ -25,3 +25,17 @@ target_include_directories(Login-Form PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Includes
     ${CMAKE_CURRENT_SOURCE_DIR}/Forms
 )
+
+include(CPack)
+
+set(CPACK_PACKAGE_NAME "Login-Form")
+set(CPACK_PACKAGE_VERSION "1.0.0")
+set(CPACK_PACKAGE_DESCRIPTION "A brief description of your project.")
+set(CPACK_PACKAGE_VENDOR "YourCompanyName")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/License.txt")
+set(CPACK_GENERATOR "ZIP;DEB")
+
+install(TARGETS Login-Form
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib)
