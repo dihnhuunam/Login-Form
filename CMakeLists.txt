@@ -16,7 +16,7 @@ set(PROJECT_SOURCES
     Includes/mainwindow.h
     Resources.qrc 
 )
-    
+
 add_executable(Login-Form ${PROJECT_SOURCES})
 
 target_link_libraries(Login-Form PRIVATE Qt5::Widgets)
@@ -39,10 +39,3 @@ install(TARGETS Login-Form
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib)
-
-# include(InstallRequiredSystemLibraries)
-# set(CPACK_PACKAGE_VERSION_MAJOR "${Tutorial_VERSION_MAJOR}")
-# set(CPACK_PACKAGE_VERSION_MINOR "${Tutorial_VERSION_MINOR}")
-# set(CPACK_GENERATOR "TGZ")
-# set(CPACK_SOURCE_GENERATOR "TGZ")
-# include(CPack)

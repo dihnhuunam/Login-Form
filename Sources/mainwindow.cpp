@@ -30,16 +30,18 @@ MainWindow::~MainWindow()
 
 void MainWindow::setupLayout()
 {
-    // Central widget setup
+    // Tạo centralWidget để quản lý tất cả các widgets
     centralWidget = new QWidget(this);
     this->setCentralWidget(centralWidget);
 
+    // Tạo container để quản lý Login-Form
     container = new QWidget(centralWidget);
     container->setObjectName("container");
     container->setMinimumSize(400, 300);
     container->setMaximumSize(600, 400);
     container->setFocus();
 
+    // Login-Form được layout vertical trong container
     QVBoxLayout *vLayout = new QVBoxLayout(container);
     vLayout->setSpacing(20);
     vLayout->setContentsMargins(50, 50, 50, 50);
@@ -90,7 +92,7 @@ void MainWindow::setupLayout()
 
 void MainWindow::setupStyles()
 {
-    // Load styles from file
+    // Tải file Style.qss trong Resources.qrc
     QFile styleFile(":/Style.qss");
     if (styleFile.open(QFile::ReadOnly))
     {
@@ -99,19 +101,19 @@ void MainWindow::setupStyles()
         styleFile.close();
     }
 
-    // Background setup
+    // Tạo backgroundLabel
     backgroundLabel = new QLabel(this);
     backgroundLabel->setPixmap(QPixmap(":/Images/background.jpg"));
     backgroundLabel->setScaledContents(true);
-    backgroundLabel->setGeometry(this->rect()); // this->react() returns the rectangle (fullscreen of mainwindow)
-    backgroundLabel->lower();                   // Set backgroundLabel at the lowest layer
+    backgroundLabel->setGeometry(this->rect()); // this->react() trả về hình chữ nhật với kích thước toàn màn hình mainwindow
+    backgroundLabel->lower();                   // Đẩy backgroundLabel xuống layer thấp nhất (dưới các Widgets khác)
 
-    // Apply blur effect to the background label
-    QGraphicsBlurEffect *blurEffect = new QGraphicsBlurEffect(this);
-    blurEffect->setBlurRadius(1);
-    backgroundLabel->setGraphicsEffect(blurEffect); // Set blur effect for background picture
+    // // Tạo hiệu ứng làm mờ blurEffect
+    // QGraphicsBlurEffect *blurEffect = new QGraphicsBlurEffect(this);
+    // blurEffect->setBlurRadius(1);
+    // backgroundLabel->setGraphicsEffect(blurEffect); // Dùng hiệu ứng làm mờ blurEffect cho backgroundLabel
 
-    // Setup Text and Styles
+    // Tạo Style Sheet cho các Widgets
     loginLabel->setText(QString::fromUtf8("Đăng Nhập"));
 
     usernameLabel->setText(QString::fromUtf8("Tài Khoản"));
@@ -131,10 +133,10 @@ void MainWindow::setupStyles()
     statusLabel->setVisible(false);
 }
 
-// Set up animations
+// Tạo Animations
 void MainWindow::setupAnimations()
 {
-    // Setup opacity effects for labels
+    // Tạo hiệu ứng trong suốt cho usernameLabel và passwordLabel
     usernameLabelEffect = new QGraphicsOpacityEffect(this);
     usernameLabelEffect->setOpacity(0);
     usernameLabel->setGraphicsEffect(usernameLabelEffect);
@@ -143,7 +145,7 @@ void MainWindow::setupAnimations()
     passwordLabelEffect->setOpacity(0);
     passwordLabel->setGraphicsEffect(passwordLabelEffect);
 
-    // Setup animations
+    // Tạo animations cho usernameLabel và passwordLabel
     usernameAnimation = new QPropertyAnimation(usernameLabelEffect, "opacity", this);
     usernameAnimation->setDuration(500);
     usernameAnimation->setEasingCurve(QEasingCurve::InCubic);
@@ -153,7 +155,7 @@ void MainWindow::setupAnimations()
     passwordAnimation->setEasingCurve(QEasingCurve::InCubic);
 }
 
-// Handle events
+// Quản lý các events 
 void MainWindow::handleUsernameFocusIn()
 {
     if (usernameLabel && usernameLineEdit)
