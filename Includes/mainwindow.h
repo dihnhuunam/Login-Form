@@ -31,6 +31,13 @@ private slots:
     void handlePasswordFocusOut();
 
 private:
+    const int CONTAINER_MIN_WIDTH = 500;
+    const int CONTAINER_MIN_HEIGHT = 300;
+    const int ANIMATION_DURATION = 500;
+
+    const QString SUCCESS_COLOR = "#6BBF59";
+    const QString ERROR_COLOR = "#FF6B6B";
+
     void setupLayout();
     void setupStyles();
     void setupConnections();

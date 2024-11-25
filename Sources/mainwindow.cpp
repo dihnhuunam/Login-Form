@@ -8,14 +8,32 @@
 #include "mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), centralWidget(nullptr), container(nullptr), backgroundLabel(nullptr),
-      statusLabel(nullptr), loginLabel(nullptr), usernameLabel(nullptr),
-      passwordLabel(nullptr), usernameLineEdit(nullptr),
-      passwordLineEdit(nullptr), loginButton(nullptr),
-      usernameLabelEffect(nullptr), passwordLabelEffect(nullptr),
-      usernameAnimation(nullptr), passwordAnimation(nullptr)
 {
+    // UI Widgets
+    centralWidget = new QWidget(this);
+    container = new QWidget(centralWidget);
+    loginLabel = new QLabel(container);
+    usernameLabel = new QLabel(container);
+    usernameLineEdit = new QLineEdit(container);
+    passwordLabel = new QLabel(container);
+    passwordLineEdit = new QLineEdit(container);
+    loginButton = new QPushButton(container);
+    statusLabel = new QLabel(container);
+    backgroundLabel = new QLabel(this);
+
+    // Đặt Object Name cho Qss
+    container->setObjectName("container");
+    loginLabel->setObjectName("loginLabel");
+    usernameLabel->setObjectName("usernameLabel");
+    passwordLabel->setObjectName("passwordLabel");
+    usernameLineEdit->setObjectName("usernameLineEdit");
+    passwordLineEdit->setObjectName("passwordLineEdit");
+    loginButton->setObjectName("loginButton");
+    statusLabel->setObjectName("statusLabel");
+
     setupLayout();
+    setCentralWidget(centralWidget);
+
     setupStyles();
     setupAnimations();
     setupConnections();
@@ -28,60 +46,26 @@ MainWindow::~MainWindow()
 
 void MainWindow::setupLayout()
 {
-    // Tạo centralWidget để quản lý tất cả các widgets
-    centralWidget = new QWidget(this);
-    this->setCentralWidget(centralWidget);
-
-    // Tạo container để quản lý Login-Form
-    container = new QWidget(centralWidget);
-    container->setObjectName("container");
-    container->setMinimumSize(500, 300);
+    setCentralWidget(centralWidget);
+    container->setMinimumSize(CONTAINER_MIN_WIDTH, CONTAINER_MIN_HEIGHT);
     container->setFocus();
     container->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
-    // Login-Form được layout vertical trong container
+    // Create Login-Form vertical layout
     QVBoxLayout *formLayout = new QVBoxLayout(container);
     formLayout->setSpacing(20);
     formLayout->setContentsMargins(50, 50, 50, 50);
 
-    // Login label
-    loginLabel = new QLabel(container);
-    loginLabel->setObjectName("loginLabel");
-    loginLabel->setAlignment(Qt::AlignCenter);
+    // Add components to layout
     formLayout->addWidget(loginLabel);
-
-    // Username label
-    usernameLabel = new QLabel(container);
-    usernameLabel->setObjectName("usernameLabel");
     formLayout->addWidget(usernameLabel);
-
-    // Username line edit
-    usernameLineEdit = new QLineEdit(container);
-    usernameLineEdit->setObjectName("usernameLineEdit");
-    usernameLineEdit->setAlignment(Qt::AlignLeft);
     formLayout->addWidget(usernameLineEdit);
-
-    // Password label
-    passwordLabel = new QLabel(container);
-    passwordLabel->setObjectName("passwordLabel");
     formLayout->addWidget(passwordLabel);
-
-    // Password line edit
-    passwordLineEdit = new QLineEdit(container);
-    passwordLineEdit->setObjectName("passwordLineEdit");
-    passwordLineEdit->setAlignment(Qt::AlignLeft);
     formLayout->addWidget(passwordLineEdit);
-
-    // Login button
-    loginButton = new QPushButton(container);
-    loginButton->setObjectName("loginButton");
     formLayout->addWidget(loginButton);
-
-    // Status label
-    statusLabel = new QLabel(container);
-    statusLabel->setObjectName("statusLabel");
     formLayout->addWidget(statusLabel);
 
+    // Create main horizontal layout
     QHBoxLayout *mainLayout = new QHBoxLayout(centralWidget);
     mainLayout->addStretch();
     mainLayout->addWidget(container, 0, Qt::AlignCenter);
@@ -90,7 +74,7 @@ void MainWindow::setupLayout()
 
 void MainWindow::setupStyles()
 {
-    // Tải file Style.qss trong Resources.qrc
+    // Load Source.qss from Resource.qrc
     QFile styleFile(":/Style.qss");
     if (styleFile.open(QFile::ReadOnly))
     {
@@ -99,24 +83,24 @@ void MainWindow::setupStyles()
         styleFile.close();
     }
 
-    // Tạo backgroundLabel
-    backgroundLabel = new QLabel(this);
+    // Background
     backgroundLabel->setPixmap(QPixmap(":/Images/background.jpg"));
     backgroundLabel->setScaledContents(true);
-    backgroundLabel->setGeometry(this->rect()); // this->react() trả về hình chữ nhật với kích thước toàn màn hình mainwindow
-    backgroundLabel->lower();                   // Đẩy backgroundLabel xuống layer thấp nhất (dưới các Widgets khác)
+    backgroundLabel->setGeometry(this->rect());
+    backgroundLabel->lower();
 
-    // Tạo Style Sheet cho các Widgets
+    // Login Label
     loginLabel->setText(QString::fromUtf8("Đăng Nhập"));
+    loginLabel->setAlignment(Qt::AlignCenter);
 
+    // Username
     usernameLabel->setText(QString::fromUtf8("Tài Khoản"));
     usernameLabel->setVisible(false);
-
     usernameLineEdit->setPlaceholderText(QString::fromUtf8("Tài Khoản"));
 
+    // Password
     passwordLabel->setText("Mật Khẩu");
     passwordLabel->setVisible(false);
-
     passwordLineEdit->setPlaceholderText(QString::fromUtf8("Mật Khẩu"));
     passwordLineEdit->setEchoMode(QLineEdit::Password);
 
@@ -242,6 +226,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
     return QMainWindow::eventFilter(watched, event);
 }
 
+// Bỏ focus khi bấm ra ngoài
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
     QWidget *focusedWidget = QApplication::focusWidget();
@@ -252,12 +237,14 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
     QMainWindow::mousePressEvent(event);
 }
 
+// Điều chỉnh kích cỡ của Background
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
     backgroundLabel->setGeometry(this->rect());
     QWidget::resizeEvent(event);
 }
 
+// Xử lý khi Login Button được bấm
 void MainWindow::on_loginButton_clicked()
 {
     QString username = usernameLineEdit->text().trimmed();
@@ -287,6 +274,7 @@ void MainWindow::on_loginButton_clicked()
     }
 }
 
+// Kết nối Signals và Slots
 void MainWindow::setupConnections()
 {
     connect(usernameLineEdit, &QLineEdit::returnPressed, this, &MainWindow::on_loginButton_clicked);
