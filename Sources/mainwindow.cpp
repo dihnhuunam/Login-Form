@@ -2,11 +2,9 @@
 #include <QGraphicsBlurEffect>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
-#include <QDebug>
-#include <QPropertyAnimation>
-#include <QGraphicsOpacityEffect>
-#include <QApplication>
 #include <QSpacerItem>
+#include <QApplication>
+#include <QDebug>
 #include "mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -19,8 +17,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     setupLayout();
     setupStyles();
-    setupConnections();
     setupAnimations();
+    setupConnections();
 }
 
 MainWindow::~MainWindow()
@@ -37,9 +35,9 @@ void MainWindow::setupLayout()
     // Tạo container để quản lý Login-Form
     container = new QWidget(centralWidget);
     container->setObjectName("container");
-    container->setMinimumSize(400, 300);
-    container->setMaximumSize(600, 400);
+    container->setMinimumSize(500, 300);
     container->setFocus();
+    container->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
     // Login-Form được layout vertical trong container
     QVBoxLayout *vLayout = new QVBoxLayout(container);
@@ -86,7 +84,7 @@ void MainWindow::setupLayout()
 
     QHBoxLayout *mainLayout = new QHBoxLayout(centralWidget);
     mainLayout->addStretch();
-    mainLayout->addWidget(container);
+    mainLayout->addWidget(container, 0, Qt::AlignCenter);
     mainLayout->addStretch();
 }
 
@@ -107,11 +105,6 @@ void MainWindow::setupStyles()
     backgroundLabel->setScaledContents(true);
     backgroundLabel->setGeometry(this->rect()); // this->react() trả về hình chữ nhật với kích thước toàn màn hình mainwindow
     backgroundLabel->lower();                   // Đẩy backgroundLabel xuống layer thấp nhất (dưới các Widgets khác)
-
-    // // Tạo hiệu ứng làm mờ blurEffect
-    // QGraphicsBlurEffect *blurEffect = new QGraphicsBlurEffect(this);
-    // blurEffect->setBlurRadius(1);
-    // backgroundLabel->setGraphicsEffect(blurEffect); // Dùng hiệu ứng làm mờ blurEffect cho backgroundLabel
 
     // Tạo Style Sheet cho các Widgets
     loginLabel->setText(QString::fromUtf8("Đăng Nhập"));
@@ -155,7 +148,7 @@ void MainWindow::setupAnimations()
     passwordAnimation->setEasingCurve(QEasingCurve::InCubic);
 }
 
-// Quản lý các events 
+// Quản lý các events
 void MainWindow::handleUsernameFocusIn()
 {
     if (usernameLabel && usernameLineEdit)
@@ -294,14 +287,12 @@ void MainWindow::on_loginButton_clicked()
     }
 }
 
-// Set up connections
 void MainWindow::setupConnections()
 {
     connect(usernameLineEdit, &QLineEdit::returnPressed, this, &MainWindow::on_loginButton_clicked);
     connect(passwordLineEdit, &QLineEdit::returnPressed, this, &MainWindow::on_loginButton_clicked);
     connect(loginButton, &QPushButton::clicked, this, &MainWindow::on_loginButton_clicked);
 
-    // Install event filter for focus events
     usernameLineEdit->installEventFilter(this);
     passwordLineEdit->installEventFilter(this);
 }
