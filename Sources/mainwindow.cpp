@@ -40,47 +40,47 @@ void MainWindow::setupLayout()
     container->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
     // Login-Form được layout vertical trong container
-    QVBoxLayout *vLayout = new QVBoxLayout(container);
-    vLayout->setSpacing(20);
-    vLayout->setContentsMargins(50, 50, 50, 50);
+    QVBoxLayout *formLayout = new QVBoxLayout(container);
+    formLayout->setSpacing(20);
+    formLayout->setContentsMargins(50, 50, 50, 50);
 
     // Login label
     loginLabel = new QLabel(container);
     loginLabel->setObjectName("loginLabel");
     loginLabel->setAlignment(Qt::AlignCenter);
-    vLayout->addWidget(loginLabel);
+    formLayout->addWidget(loginLabel);
 
     // Username label
     usernameLabel = new QLabel(container);
     usernameLabel->setObjectName("usernameLabel");
-    vLayout->addWidget(usernameLabel);
+    formLayout->addWidget(usernameLabel);
 
     // Username line edit
     usernameLineEdit = new QLineEdit(container);
     usernameLineEdit->setObjectName("usernameLineEdit");
     usernameLineEdit->setAlignment(Qt::AlignLeft);
-    vLayout->addWidget(usernameLineEdit);
+    formLayout->addWidget(usernameLineEdit);
 
     // Password label
     passwordLabel = new QLabel(container);
     passwordLabel->setObjectName("passwordLabel");
-    vLayout->addWidget(passwordLabel);
+    formLayout->addWidget(passwordLabel);
 
     // Password line edit
     passwordLineEdit = new QLineEdit(container);
     passwordLineEdit->setObjectName("passwordLineEdit");
     passwordLineEdit->setAlignment(Qt::AlignLeft);
-    vLayout->addWidget(passwordLineEdit);
+    formLayout->addWidget(passwordLineEdit);
 
     // Login button
     loginButton = new QPushButton(container);
     loginButton->setObjectName("loginButton");
-    vLayout->addWidget(loginButton);
+    formLayout->addWidget(loginButton);
 
     // Status label
     statusLabel = new QLabel(container);
     statusLabel->setObjectName("statusLabel");
-    vLayout->addWidget(statusLabel);
+    formLayout->addWidget(statusLabel);
 
     QHBoxLayout *mainLayout = new QHBoxLayout(centralWidget);
     mainLayout->addStretch();
