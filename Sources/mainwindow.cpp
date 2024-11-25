@@ -21,9 +21,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     setupConnections();
 }
 
-MainWindow::~MainWindow()
-{
-}
+MainWindow::~MainWindow() {}
 
 void MainWindow::setupUiWidgets()
 {
@@ -38,6 +36,8 @@ void MainWindow::setupUiWidgets()
     passwordLineEdit = new QLineEdit(container);
     loginButton = new QPushButton(container);
     statusLabel = new QLabel(container);
+    themeLabel = new QLabel(this);
+    themeButton = new QPushButton(this);
 
     // Đặt Object Name cho Qss
     container->setObjectName("container");
@@ -48,6 +48,8 @@ void MainWindow::setupUiWidgets()
     passwordLineEdit->setObjectName("passwordLineEdit");
     loginButton->setObjectName("loginButton");
     statusLabel->setObjectName("statusLabel");
+    themeLabel->setObjectName("themeLabel");
+    themeButton->setObjectName("themeButton");
 }
 
 void MainWindow::setupLayout()
@@ -55,7 +57,7 @@ void MainWindow::setupLayout()
     setCentralWidget(centralWidget);
     container->setMinimumSize(CONTAINER_MIN_WIDTH, CONTAINER_MIN_HEIGHT);
 
-    QVBoxLayout *formLayout = new QVBoxLayout(container);
+    auto *formLayout = new QVBoxLayout(container);
     formLayout->setSpacing(20);
     formLayout->setContentsMargins(50, 50, 50, 50);
 
@@ -67,15 +69,17 @@ void MainWindow::setupLayout()
     formLayout->addWidget(loginButton);
     formLayout->addWidget(statusLabel);
 
-    QHBoxLayout *mainLayout = new QHBoxLayout(centralWidget);
+    auto *mainLayout = new QVBoxLayout(centralWidget);
     mainLayout->addStretch();
     mainLayout->addWidget(container, 0, Qt::AlignCenter);
+    mainLayout->addWidget(themeLabel, 0, Qt::AlignCenter);
+    mainLayout->addWidget(themeButton, 0, Qt::AlignCenter);
     mainLayout->addStretch();
 }
 
 void MainWindow::setupStyles()
 {
-    QFile styleFile(":/Style.qss");
+    QFile styleFile(":/Styles/Dark.qss");
     if (styleFile.open(QFile::ReadOnly))
     {
         QString style = QString::fromUtf8(styleFile.readAll());
@@ -83,7 +87,7 @@ void MainWindow::setupStyles()
         styleFile.close();
     }
 
-    backgroundLabel->setPixmap(QPixmap(":/Images/background.jpg"));
+    backgroundLabel->setPixmap(QPixmap(":/Images/background_dark.jpg"));
     backgroundLabel->setScaledContents(true);
     backgroundLabel->setGeometry(this->rect());
     backgroundLabel->lower();
@@ -104,6 +108,11 @@ void MainWindow::setupStyles()
 
     statusLabel->setAlignment(Qt::AlignCenter);
     statusLabel->setVisible(false);
+
+    themeLabel->setAlignment(Qt::AlignCenter);
+    themeLabel->setText("Dark Mode");
+
+    themeButton->setText(QString::fromUtf8("Change Mode"));
 }
 
 void MainWindow::setupAnimations()

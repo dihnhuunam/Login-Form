@@ -32,6 +32,8 @@ private:
     QLineEdit *passwordLineEdit;
     QPushButton *loginButton;
     QLabel *statusLabel;
+    QLabel *themeLabel;
+    QPushButton *themeButton;
     QPropertyAnimation *usernameAnimation;
     QPropertyAnimation *passwordAnimation;
     QGraphicsOpacityEffect *usernameLabelEffect;

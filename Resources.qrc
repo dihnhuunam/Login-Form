@@ -1,7 +1,8 @@
 <RCC>
     <qresource prefix="/">
-        <file>Style.qss</file>
-        <file>Images/background.jpg</file>
-        <file>Images/background.png</file>
+        <file>Styles/Dark.qss</file>
+        <file>Styles/Light.qss</file>
+        <file>Images/background_dark.jpg</file>
+        <file>Images/background_dark.png</file>
     </qresource>
 </RCC>
