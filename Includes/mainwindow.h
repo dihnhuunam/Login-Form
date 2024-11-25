@@ -38,6 +38,7 @@ private:
     const QString SUCCESS_COLOR = "#6BBF59";
     const QString ERROR_COLOR = "#FF6B6B";
 
+    void setupUiWidgets();
     void setupLayout();
     void setupStyles();
     void setupConnections();

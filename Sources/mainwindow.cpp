@@ -9,6 +9,21 @@
 
 MainWindow::MainWindow(QWidget *parent)
 {
+
+    setupUiWidgets();
+    setupLayout();
+    setupStyles();
+    setupAnimations();
+    setupConnections();
+}
+
+MainWindow::~MainWindow()
+{
+    delete centralWidget;
+}
+
+void MainWindow::setupUiWidgets()
+{
     // UI Widgets
     centralWidget = new QWidget(this);
     container = new QWidget(centralWidget);
@@ -30,18 +45,6 @@ MainWindow::MainWindow(QWidget *parent)
     passwordLineEdit->setObjectName("passwordLineEdit");
     loginButton->setObjectName("loginButton");
     statusLabel->setObjectName("statusLabel");
-
-    setupLayout();
-    setCentralWidget(centralWidget);
-
-    setupStyles();
-    setupAnimations();
-    setupConnections();
-}
-
-MainWindow::~MainWindow()
-{
-    delete centralWidget;
 }
 
 void MainWindow::setupLayout()
@@ -51,12 +54,12 @@ void MainWindow::setupLayout()
     container->setFocus();
     container->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
-    // Create Login-Form vertical layout
+    // Tạo Login-Form layout dọc
     QVBoxLayout *formLayout = new QVBoxLayout(container);
     formLayout->setSpacing(20);
     formLayout->setContentsMargins(50, 50, 50, 50);
 
-    // Add components to layout
+    // Thêm các Widgets vào layout
     formLayout->addWidget(loginLabel);
     formLayout->addWidget(usernameLabel);
     formLayout->addWidget(usernameLineEdit);
@@ -65,7 +68,7 @@ void MainWindow::setupLayout()
     formLayout->addWidget(loginButton);
     formLayout->addWidget(statusLabel);
 
-    // Create main horizontal layout
+    // Tạo main layout ngang
     QHBoxLayout *mainLayout = new QHBoxLayout(centralWidget);
     mainLayout->addStretch();
     mainLayout->addWidget(container, 0, Qt::AlignCenter);
@@ -74,7 +77,7 @@ void MainWindow::setupLayout()
 
 void MainWindow::setupStyles()
 {
-    // Load Source.qss from Resource.qrc
+    // Tải Source.qss từ Resource.qrc
     QFile styleFile(":/Style.qss");
     if (styleFile.open(QFile::ReadOnly))
     {
