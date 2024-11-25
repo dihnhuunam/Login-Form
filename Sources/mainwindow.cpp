@@ -1,15 +1,19 @@
 #include <QFile>
-#include <QGraphicsBlurEffect>
+#include <QGraphicsOpacityEffect>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
-#include <QSpacerItem>
 #include <QApplication>
 #include <QDebug>
 #include "mainwindow.h"
 
+const int CONTAINER_MIN_WIDTH = 500;
+const int CONTAINER_MIN_HEIGHT = 300;
+const int ANIMATION_DURATION = 800;
+const QString successColor = "#6BBF59";
+const QString errorColor = "#FF6B6B";
+
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
-
     setupUiWidgets();
     setupLayout();
     setupStyles();
@@ -19,13 +23,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
 MainWindow::~MainWindow()
 {
-    delete centralWidget;
 }
 
 void MainWindow::setupUiWidgets()
 {
     // UI Widgets
     centralWidget = new QWidget(this);
+    backgroundLabel = new QLabel(this);
     container = new QWidget(centralWidget);
     loginLabel = new QLabel(container);
     usernameLabel = new QLabel(container);
@@ -34,7 +38,6 @@ void MainWindow::setupUiWidgets()
     passwordLineEdit = new QLineEdit(container);
     loginButton = new QPushButton(container);
     statusLabel = new QLabel(container);
-    backgroundLabel = new QLabel(this);
 
     // Đặt Object Name cho Qss
     container->setObjectName("container");
@@ -51,15 +54,11 @@ void MainWindow::setupLayout()
 {
     setCentralWidget(centralWidget);
     container->setMinimumSize(CONTAINER_MIN_WIDTH, CONTAINER_MIN_HEIGHT);
-    container->setFocus();
-    container->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
-    // Tạo Login-Form layout dọc
     QVBoxLayout *formLayout = new QVBoxLayout(container);
     formLayout->setSpacing(20);
     formLayout->setContentsMargins(50, 50, 50, 50);
 
-    // Thêm các Widgets vào layout
     formLayout->addWidget(loginLabel);
     formLayout->addWidget(usernameLabel);
     formLayout->addWidget(usernameLineEdit);
@@ -68,7 +67,6 @@ void MainWindow::setupLayout()
     formLayout->addWidget(loginButton);
     formLayout->addWidget(statusLabel);
 
-    // Tạo main layout ngang
     QHBoxLayout *mainLayout = new QHBoxLayout(centralWidget);
     mainLayout->addStretch();
     mainLayout->addWidget(container, 0, Qt::AlignCenter);
@@ -77,43 +75,37 @@ void MainWindow::setupLayout()
 
 void MainWindow::setupStyles()
 {
-    // Tải Source.qss từ Resource.qrc
     QFile styleFile(":/Style.qss");
     if (styleFile.open(QFile::ReadOnly))
     {
         QString style = QString::fromUtf8(styleFile.readAll());
-        this->setStyleSheet(style);
+        setStyleSheet(style);
         styleFile.close();
     }
 
-    // Background
     backgroundLabel->setPixmap(QPixmap(":/Images/background.jpg"));
     backgroundLabel->setScaledContents(true);
     backgroundLabel->setGeometry(this->rect());
     backgroundLabel->lower();
 
-    // Login Label
-    loginLabel->setText(QString::fromUtf8("Đăng Nhập"));
+    loginLabel->setText("Đăng Nhập");
     loginLabel->setAlignment(Qt::AlignCenter);
 
-    // Username
-    usernameLabel->setText(QString::fromUtf8("Tài Khoản"));
+    usernameLabel->setText("Tài Khoản");
     usernameLabel->setVisible(false);
-    usernameLineEdit->setPlaceholderText(QString::fromUtf8("Tài Khoản"));
+    usernameLineEdit->setPlaceholderText("Tài Khoản");
 
-    // Password
     passwordLabel->setText("Mật Khẩu");
     passwordLabel->setVisible(false);
-    passwordLineEdit->setPlaceholderText(QString::fromUtf8("Mật Khẩu"));
+    passwordLineEdit->setPlaceholderText("Mật Khẩu");
     passwordLineEdit->setEchoMode(QLineEdit::Password);
 
-    loginButton->setText(QString::fromUtf8("Đăng Nhập"));
+    loginButton->setText("Đăng Nhập");
 
     statusLabel->setAlignment(Qt::AlignCenter);
     statusLabel->setVisible(false);
 }
 
-// Tạo Animations
 void MainWindow::setupAnimations()
 {
     // Tạo hiệu ứng trong suốt cho usernameLabel và passwordLabel
@@ -135,125 +127,90 @@ void MainWindow::setupAnimations()
     passwordAnimation->setEasingCurve(QEasingCurve::InCubic);
 }
 
-// Quản lý các events
-void MainWindow::handleUsernameFocusIn()
+// FocusIn: Nếu đã có nội dung, hiển thị label nhưng không chạy animation.
+void MainWindow::handleFocusIn(QLabel *label, QLineEdit *lineEdit, QPropertyAnimation *animation)
 {
-    if (usernameLabel && usernameLineEdit)
+    if (label && lineEdit)
     {
-        usernameLabel->setVisible(true);
-        usernameLineEdit->setPlaceholderText("");
-
-        usernameAnimation->stop();
-        usernameAnimation->setStartValue(0);
-        usernameAnimation->setEndValue(1);
-        usernameAnimation->start();
-    }
-}
-
-void MainWindow::handlePasswordFocusIn()
-{
-    if (passwordLabel && passwordLineEdit)
-    {
-        passwordLabel->setVisible(true);
-        passwordLineEdit->setPlaceholderText("");
-
-        passwordAnimation->stop();
-        passwordAnimation->setStartValue(0);
-        passwordAnimation->setEndValue(1);
-        passwordAnimation->start();
-    }
-}
-
-void MainWindow::handleUsernameFocusOut()
-{
-    if (usernameLabel && usernameLineEdit)
-    {
-        if (usernameLineEdit->text().isEmpty())
+        if (!(lineEdit->text().isEmpty()))
         {
-            usernameAnimation->stop();
-            usernameAnimation->setStartValue(1.0);
-            usernameAnimation->setEndValue(0.0);
-            connect(usernameAnimation, &QPropertyAnimation::finished, this, [this]()
-                    {
-                usernameLabel->setVisible(false);
-                usernameLineEdit->setPlaceholderText("Tài khoản");
-                disconnect(usernameAnimation, &QPropertyAnimation::finished, this, nullptr); });
-            usernameAnimation->start();
+            label->setVisible(true);
+            return;
         }
+
+        label->setVisible(true);
+        lineEdit->setPlaceholderText("");
+
+        animation->stop();
+        animation->setStartValue(0);
+        animation->setEndValue(1);
+        animation->setDuration(ANIMATION_DURATION);
+        animation->start();
     }
 }
 
-void MainWindow::handlePasswordFocusOut()
+// FocusOut: Nếu không có nội dung, chạy animation và ẩn label.
+void MainWindow::handleFocusOut(QLabel *label, QLineEdit *lineEdit, QPropertyAnimation *animation)
 {
-    if (passwordLabel && passwordLineEdit)
+    if (label && lineEdit)
     {
-        if (passwordLineEdit->text().isEmpty())
+        if (!(lineEdit->text().isEmpty()))
         {
-            passwordAnimation->stop();
-            passwordAnimation->setStartValue(1.0);
-            passwordAnimation->setEndValue(0.0);
-            connect(passwordAnimation, &QPropertyAnimation::finished, this, [this]()
+            return;
+        }
+
+        if (lineEdit->text().isEmpty())
+        {
+            animation->stop();
+            animation->setStartValue(1.0);
+            animation->setEndValue(0.0);
+            connect(animation, &QPropertyAnimation::finished, this, [label, lineEdit, animation]()
                     {
-                passwordLabel->setVisible(false);
-                passwordLineEdit->setPlaceholderText("Mật khẩu");
-                disconnect(passwordAnimation, &QPropertyAnimation::finished, this, nullptr); });
-            passwordAnimation->start();
+                label->setVisible(false);
+                lineEdit->setPlaceholderText(label->text());
+                disconnect(animation, &QPropertyAnimation::finished, nullptr, nullptr); });
+            animation->start();
         }
     }
 }
 
 bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 {
-    if (watched == usernameLineEdit)
+    if (watched == usernameLineEdit || watched == passwordLineEdit)
     {
+        QLabel *label = (watched == usernameLineEdit) ? usernameLabel : passwordLabel;
+        QPropertyAnimation *animation = (watched == usernameLineEdit) ? usernameAnimation : passwordAnimation;
+
         if (event->type() == QEvent::FocusIn)
         {
-            handleUsernameFocusIn();
+            handleFocusIn(label, qobject_cast<QLineEdit *>(watched), animation);
         }
         else if (event->type() == QEvent::FocusOut)
         {
-            handleUsernameFocusOut();
-        }
-    }
-    else if (watched == passwordLineEdit)
-    {
-        if (event->type() == QEvent::FocusIn)
-        {
-            handlePasswordFocusIn();
-        }
-        else if (event->type() == QEvent::FocusOut)
-        {
-            handlePasswordFocusOut();
+            handleFocusOut(label, qobject_cast<QLineEdit *>(watched), animation);
         }
     }
     return QMainWindow::eventFilter(watched, event);
 }
 
-// Bỏ focus khi bấm ra ngoài
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
     QWidget *focusedWidget = QApplication::focusWidget();
     if (focusedWidget)
-    {
         focusedWidget->clearFocus();
-    }
     QMainWindow::mousePressEvent(event);
 }
 
-// Điều chỉnh kích cỡ của Background
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
     backgroundLabel->setGeometry(this->rect());
-    QWidget::resizeEvent(event);
+    QMainWindow::resizeEvent(event);
 }
 
-// Xử lý khi Login Button được bấm
 void MainWindow::on_loginButton_clicked()
 {
     QString username = usernameLineEdit->text().trimmed();
     QString password = passwordLineEdit->text();
-    QString successColor = "#6BBF59";
-    QString errorColor = "#FF6B6B";
 
     if (username.isEmpty() || password.isEmpty())
     {
@@ -277,7 +234,6 @@ void MainWindow::on_loginButton_clicked()
     }
 }
 
-// Kết nối Signals và Slots
 void MainWindow::setupConnections()
 {
     connect(usernameLineEdit, &QLineEdit::returnPressed, this, &MainWindow::on_loginButton_clicked);
