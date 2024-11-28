@@ -14,7 +14,6 @@
             "generator": "Ninja",
             "cacheVariables": {
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
-                "CMAKE_C_COMPILER": "/usr/bin/gcc-13",
                 "CMAKE_CXX_COMPILER": "/usr/bin/g++-13",
                 "CMAKE_BUILD_TYPE": "Debug"
             }
@@ -28,7 +27,6 @@
             "generator": "Ninja",
             "cacheVariables": {
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
-                "CMAKE_C_COMPILER": "/usr/bin/gcc-13",
                 "CMAKE_CXX_COMPILER": "/usr/bin/g++-13",
                 "CMAKE_BUILD_TYPE": "Release"
             }
