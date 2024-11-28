@@ -359,7 +359,7 @@ void MainWindow::setupConnections()
     connect(usernameLineEdit, &QLineEdit::returnPressed, this, &MainWindow::on_loginButton_clicked);
     connect(passwordLineEdit, &QLineEdit::returnPressed, this, &MainWindow::on_loginButton_clicked);
     connect(loginButton, &QPushButton::clicked, this, &MainWindow::on_loginButton_clicked);
-    connect(themeButton, &QPushButton::clicked, this, &MainWindow::toggleTheme); // Kết nối nút đổi theme
+    connect(themeButton, &QPushButton::clicked, this, &MainWindow::toggleTheme); 
 
     usernameLineEdit->installEventFilter(this);
     passwordLineEdit->installEventFilter(this);
