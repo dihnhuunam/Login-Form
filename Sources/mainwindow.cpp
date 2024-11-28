@@ -16,7 +16,13 @@ const QString lightIcon = ":/Images/light_icon.png";
 const QString darkIcon = ":/Images/dark_icon.png";
 const QString lightBackground = ":/Images/background_light.jpg";
 const QString darkBackground = ":/Images/background_dark.jpg";
+const QString lightSyle = ":/Styles/Light.qss";
+const QString darkSyle = ":/Styles/Dark.qss";
 
+/**
+ * @brief Constructor cho MainWindow. Khởi tạo các thành phần giao diện và thiết lập các kết nối cần thiết.
+ * @param parent Con trỏ tới QWidget cha (nếu có).
+ */
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
     setupUiWidgets();
@@ -27,8 +33,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     updateTheme();
 }
 
+/**
+ * @brief Destructor cho MainWindow. Dọn dẹp tài nguyên nếu cần.
+ */
 MainWindow::~MainWindow() {}
 
+/**
+ * @brief Thiết lập các widget giao diện người dùng (UI).
+ */
 void MainWindow::setupUiWidgets()
 {
     // UI Widgets
@@ -44,8 +56,6 @@ void MainWindow::setupUiWidgets()
     statusLabel = new QLabel(container);
     themeButton = new QPushButton(this);
 
-    // Animations
-
     // Đặt Object Name cho Qss
     container->setObjectName("container");
     loginLabel->setObjectName("loginLabel");
@@ -58,6 +68,9 @@ void MainWindow::setupUiWidgets()
     themeButton->setObjectName("themeButton");
 }
 
+/**
+ * @brief Thiết lập layout (bố cục) cho các widget trong cửa sổ chính.
+ */
 void MainWindow::setupLayout()
 {
     setCentralWidget(centralWidget);
@@ -82,6 +95,9 @@ void MainWindow::setupLayout()
     mainLayout->addStretch();
 }
 
+/**
+ * @brief Cập nhật giao diện theo chế độ sáng/tối hiện tại, bao gồm các hiệu ứng chuyển đổi.
+ */
 void MainWindow::updateTheme()
 {
 
@@ -93,7 +109,7 @@ void MainWindow::updateTheme()
     if (isDarkMode)
     {
         // Dark Mode
-        QFile styleFile(":/Styles/Dark.qss");
+        QFile styleFile(darkSyle);
         if (styleFile.open(QFile::ReadOnly))
         {
             setStyleSheet(QString::fromUtf8(styleFile.readAll()));
@@ -108,7 +124,7 @@ void MainWindow::updateTheme()
     else
     {
         // Light Mode
-        QFile styleFile(":/Styles/Light.qss");
+        QFile styleFile(lightSyle);
         if (styleFile.open(QFile::ReadOnly))
         {
             setStyleSheet(QString::fromUtf8(styleFile.readAll()));
@@ -131,12 +147,18 @@ void MainWindow::updateTheme()
     backgroundLabel->lower();
 }
 
+/**
+ * @brief Chuyển đổi chế độ giao diện giữa sáng và tối.
+ */
 void MainWindow::toggleTheme()
 {
     isDarkMode = !isDarkMode;
     updateTheme();
 }
 
+/**
+ * @brief Thiết lập các thuộc tính phong cách (style) cho các widget.
+ */
 void MainWindow::setupStyles()
 {
     loginLabel->setText("Đăng Nhập");
@@ -162,10 +184,11 @@ void MainWindow::setupStyles()
     statusLabel->setAlignment(Qt::AlignCenter);
     statusLabel->setVisible(false);
     statusLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-
-    // Đặt icon và kích thước của themeButton
 }
 
+/**
+ * @brief Thiết lập các hiệu ứng hoạt hình (animation) cho các widget giao diện.
+ */
 void MainWindow::setupAnimations()
 {
     // Tạo hiệu ứng trong suốt cho usernameLabel và passwordLabel
@@ -196,7 +219,12 @@ void MainWindow::setupAnimations()
     themeAnimation->setEasingCurve(QEasingCurve::InOutQuad);
 }
 
-// FocusIn: Nếu đã có nội dung, hiển thị label nhưng không chạy animation.
+/**
+ * @brief Xử lý sự kiện khi một QLineEdit nhận được focus. Hiển thị label kèm hiệu ứng.
+ * @param label QLabel liên kết với QLineEdit.
+ * @param lineEdit QLineEdit cần xử lý.
+ * @param animation Hiệu ứng hoạt hình áp dụng.
+ */
 void MainWindow::handleFocusIn(QLabel *label, QLineEdit *lineEdit, QPropertyAnimation *animation)
 {
     if (label && lineEdit)
@@ -218,7 +246,12 @@ void MainWindow::handleFocusIn(QLabel *label, QLineEdit *lineEdit, QPropertyAnim
     }
 }
 
-// FocusOut: Nếu không có nội dung, chạy animation và ẩn label.
+/**
+ * @brief Xử lý sự kiện khi một QLineEdit mất focus. Ẩn label kèm hiệu ứng.
+ * @param label QLabel liên kết với QLineEdit.
+ * @param lineEdit QLineEdit cần xử lý.
+ * @param animation Hiệu ứng hoạt hình áp dụng.
+ */
 void MainWindow::handleFocusOut(QLabel *label, QLineEdit *lineEdit, QPropertyAnimation *animation)
 {
     if (label && lineEdit)
@@ -243,6 +276,12 @@ void MainWindow::handleFocusOut(QLabel *label, QLineEdit *lineEdit, QPropertyAni
     }
 }
 
+/**
+ * @brief Lọc và xử lý các sự kiện liên quan đến QLineEdit (FocusIn, FocusOut).
+ * @param watched Đối tượng bị giám sát.
+ * @param event Sự kiện được kích hoạt.
+ * @return Trả về true nếu sự kiện được xử lý, ngược lại trả về false.
+ */
 bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 {
     if (watched == usernameLineEdit || watched == passwordLineEdit)
@@ -262,6 +301,10 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
     return QMainWindow::eventFilter(watched, event);
 }
 
+/**
+ * @brief Xử lý sự kiện nhấn chuột. Loại bỏ focus khỏi widget hiện tại.
+ * @param event Sự kiện chuột.
+ */
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
     QWidget *focusedWidget = QApplication::focusWidget();
@@ -270,12 +313,19 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
     QMainWindow::mousePressEvent(event);
 }
 
+/**
+ * @brief Xử lý sự kiện thay đổi kích thước cửa sổ chính. Điều chỉnh kích thước ảnh nền.
+ * @param event Sự kiện thay đổi kích thước.
+ */
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
     backgroundLabel->setGeometry(this->rect());
     QMainWindow::resizeEvent(event);
 }
 
+/**
+ * @brief Xử lý sự kiện khi nút "Đăng Nhập" được nhấn. Kiểm tra thông tin và hiển thị kết quả.
+ */
 void MainWindow::on_loginButton_clicked()
 {
     QString username = usernameLineEdit->text().trimmed();
@@ -303,6 +353,9 @@ void MainWindow::on_loginButton_clicked()
     }
 }
 
+/**
+ * @brief Thiết lập các kết nối signals-slots cho các widget.
+ */
 void MainWindow::setupConnections()
 {
     connect(usernameLineEdit, &QLineEdit::returnPressed, this, &MainWindow::on_loginButton_clicked);
