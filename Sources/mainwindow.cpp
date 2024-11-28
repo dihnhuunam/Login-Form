@@ -200,11 +200,11 @@ void MainWindow::setupAnimations()
 
     // Tạo animations cho usernameLabel và passwordLabel
     usernameAnimation = new QPropertyAnimation(usernameLabelEffect, "opacity", this);
-    usernameAnimation->setDuration(500);
+    usernameAnimation->setDuration(ANIMATION_DURATION);
     usernameAnimation->setEasingCurve(QEasingCurve::InCubic);
 
     passwordAnimation = new QPropertyAnimation(passwordLabelEffect, "opacity", this);
-    passwordAnimation->setDuration(500);
+    passwordAnimation->setDuration(ANIMATION_DURATION);
     passwordAnimation->setEasingCurve(QEasingCurve::InCubic);
 
     // Tạo hiệu ứng cho chuyển giữa 2 mode
@@ -213,7 +213,7 @@ void MainWindow::setupAnimations()
 
     // Tạo animation khi chuyển giữa 2 mode
     themeAnimation = new QPropertyAnimation(backgroundEffect, "opacity", this);
-    themeAnimation->setDuration(500);
+    themeAnimation->setDuration(ANIMATION_DURATION);
     themeAnimation->setEasingCurve(QEasingCurve::InQuad);
 }
 
