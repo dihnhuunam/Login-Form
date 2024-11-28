@@ -27,10 +27,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
     setupUiWidgets();
     setupLayout();
-    setupStyles();
     setupAnimations();
+    setupTheme();
     setupConnections();
-    updateTheme();
 }
 
 /**
@@ -43,7 +42,6 @@ MainWindow::~MainWindow() {}
  */
 void MainWindow::setupUiWidgets()
 {
-    // UI Widgets
     centralWidget = new QWidget(this);
     backgroundLabel = new QLabel(this);
     container = new QWidget(centralWidget);
@@ -56,20 +54,43 @@ void MainWindow::setupUiWidgets()
     statusLabel = new QLabel(container);
     themeButton = new QPushButton(this);
 
-    // Đặt Object Name cho Qss
     container->setObjectName("container");
-    loginLabel->setObjectName("loginLabel");
-    usernameLabel->setObjectName("usernameLabel");
-    passwordLabel->setObjectName("passwordLabel");
-    usernameLineEdit->setObjectName("usernameLineEdit");
-    passwordLineEdit->setObjectName("passwordLineEdit");
-    loginButton->setObjectName("loginButton");
-    statusLabel->setObjectName("statusLabel");
     themeButton->setObjectName("themeButton");
+
+    loginLabel->setObjectName("loginLabel");
+    loginLabel->setText("Đăng Nhập");
+    loginLabel->setAlignment(Qt::AlignCenter);
+    loginLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+    usernameLabel->setObjectName("usernameLabel");
+    usernameLabel->setText("Tài Khoản");
+    usernameLabel->setVisible(false);
+
+    usernameLineEdit->setObjectName("usernameLineEdit");
+    usernameLineEdit->setPlaceholderText("Tài Khoản");
+    usernameLineEdit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+    passwordLabel->setObjectName("passwordLabel");
+    passwordLabel->setText("Mật Khẩu");
+    passwordLabel->setVisible(false);
+
+    passwordLineEdit->setObjectName("passwordLineEdit");
+    passwordLineEdit->setPlaceholderText("Mật Khẩu");
+    passwordLineEdit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    passwordLineEdit->setEchoMode(QLineEdit::Password);
+
+    loginButton->setObjectName("loginButton");
+    loginButton->setText("Đăng Nhập");
+    loginButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+    statusLabel->setObjectName("statusLabel");
+    statusLabel->setAlignment(Qt::AlignCenter);
+    statusLabel->setVisible(false);
+    statusLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 }
 
 /**
- * @brief Thiết lập layout (bố cục) cho các widget trong cửa sổ chính.
+ * @brief Thiết lập layout cho các widget trong cửa sổ chính.
  */
 void MainWindow::setupLayout()
 {
@@ -96,16 +117,41 @@ void MainWindow::setupLayout()
 }
 
 /**
+ * @brief Thiết lập các hiệu ứng hoạt hình (animation) cho các widget giao diện.
+ */
+void MainWindow::setupAnimations()
+{
+    // Tạo hiệu ứng trong suốt cho usernameLabel và passwordLabel
+    usernameLabelEffect = new QGraphicsOpacityEffect(this);
+    usernameLabel->setGraphicsEffect(usernameLabelEffect);
+
+    passwordLabelEffect = new QGraphicsOpacityEffect(this);
+    passwordLabel->setGraphicsEffect(passwordLabelEffect);
+
+    // Tạo animations cho usernameLabel và passwordLabel
+    usernameAnimation = new QPropertyAnimation(usernameLabelEffect, "opacity", this);
+    usernameAnimation->setDuration(ANIMATION_DURATION);
+    usernameAnimation->setEasingCurve(QEasingCurve::InCubic);
+
+    passwordAnimation = new QPropertyAnimation(passwordLabelEffect, "opacity", this);
+    passwordAnimation->setDuration(ANIMATION_DURATION);
+    passwordAnimation->setEasingCurve(QEasingCurve::InCubic);
+
+    // Tạo hiệu ứng cho chuyển giữa 2 mode
+    backgroundEffect = new QGraphicsOpacityEffect(this);
+    backgroundLabel->setGraphicsEffect(backgroundEffect);
+
+    // Tạo animation khi chuyển giữa 2 mode
+    themeAnimation = new QPropertyAnimation(backgroundEffect, "opacity", this);
+    themeAnimation->setDuration(ANIMATION_DURATION);
+    themeAnimation->setEasingCurve(QEasingCurve::InQuad);
+}
+
+/**
  * @brief Cập nhật giao diện theo chế độ sáng/tối hiện tại, bao gồm các hiệu ứng chuyển đổi.
  */
-void MainWindow::updateTheme()
+void MainWindow::setupTheme()
 {
-
-    themeAnimation->stop();
-    themeAnimation->setStartValue(1.0);
-    themeAnimation->setEndValue(0.0);
-    themeAnimation->start();
-
     if (isDarkMode)
     {
         // Dark Mode
@@ -153,68 +199,7 @@ void MainWindow::updateTheme()
 void MainWindow::toggleTheme()
 {
     isDarkMode = !isDarkMode;
-    updateTheme();
-}
-
-/**
- * @brief Thiết lập các thuộc tính phong cách (style) cho các widget.
- */
-void MainWindow::setupStyles()
-{
-    loginLabel->setText("Đăng Nhập");
-    loginLabel->setAlignment(Qt::AlignCenter);
-    loginLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-
-    usernameLabel->setText("Tài Khoản");
-    usernameLabel->setVisible(false);
-
-    usernameLineEdit->setPlaceholderText("Tài Khoản");
-    usernameLineEdit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-
-    passwordLabel->setText("Mật Khẩu");
-    passwordLabel->setVisible(false);
-
-    passwordLineEdit->setPlaceholderText("Mật Khẩu");
-    passwordLineEdit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    passwordLineEdit->setEchoMode(QLineEdit::Password);
-
-    loginButton->setText("Đăng Nhập");
-    loginButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-
-    statusLabel->setAlignment(Qt::AlignCenter);
-    statusLabel->setVisible(false);
-    statusLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-}
-
-/**
- * @brief Thiết lập các hiệu ứng hoạt hình (animation) cho các widget giao diện.
- */
-void MainWindow::setupAnimations()
-{
-    // Tạo hiệu ứng trong suốt cho usernameLabel và passwordLabel
-    usernameLabelEffect = new QGraphicsOpacityEffect(this);
-    usernameLabel->setGraphicsEffect(usernameLabelEffect);
-
-    passwordLabelEffect = new QGraphicsOpacityEffect(this);
-    passwordLabel->setGraphicsEffect(passwordLabelEffect);
-
-    // Tạo animations cho usernameLabel và passwordLabel
-    usernameAnimation = new QPropertyAnimation(usernameLabelEffect, "opacity", this);
-    usernameAnimation->setDuration(ANIMATION_DURATION);
-    usernameAnimation->setEasingCurve(QEasingCurve::InCubic);
-
-    passwordAnimation = new QPropertyAnimation(passwordLabelEffect, "opacity", this);
-    passwordAnimation->setDuration(ANIMATION_DURATION);
-    passwordAnimation->setEasingCurve(QEasingCurve::InCubic);
-
-    // Tạo hiệu ứng cho chuyển giữa 2 mode
-    backgroundEffect = new QGraphicsOpacityEffect(this);
-    backgroundLabel->setGraphicsEffect(backgroundEffect);
-
-    // Tạo animation khi chuyển giữa 2 mode
-    themeAnimation = new QPropertyAnimation(backgroundEffect, "opacity", this);
-    themeAnimation->setDuration(ANIMATION_DURATION);
-    themeAnimation->setEasingCurve(QEasingCurve::InQuad);
+    setupTheme();
 }
 
 /**
@@ -359,7 +344,7 @@ void MainWindow::setupConnections()
     connect(usernameLineEdit, &QLineEdit::returnPressed, this, &MainWindow::on_loginButton_clicked);
     connect(passwordLineEdit, &QLineEdit::returnPressed, this, &MainWindow::on_loginButton_clicked);
     connect(loginButton, &QPushButton::clicked, this, &MainWindow::on_loginButton_clicked);
-    connect(themeButton, &QPushButton::clicked, this, &MainWindow::toggleTheme); 
+    connect(themeButton, &QPushButton::clicked, this, &MainWindow::toggleTheme);
 
     usernameLineEdit->installEventFilter(this);
     passwordLineEdit->installEventFilter(this);

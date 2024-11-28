@@ -40,14 +40,12 @@ private:
     QGraphicsOpacityEffect *backgroundEffect;
     QPropertyAnimation *themeAnimation;
 
-
     bool isDarkMode = false;
 
     void toggleTheme();
-    void updateTheme();
+    void setupTheme();
     void setupUiWidgets();
     void setupLayout();
-    void setupStyles();
     void setupConnections();
     void setupAnimations();
     void handleFocusIn(QLabel *label, QLineEdit *lineEdit, QPropertyAnimation *animation);
