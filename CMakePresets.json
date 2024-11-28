@@ -7,35 +7,30 @@
     },
     "configurePresets": [
         {
-            "name": "lra-x86_64-debug",
-            "displayName": "LRA-Debugger with Ninja for linux-x86_64",
-            "description": "Using compilers: C = /usr/bin/gcc-11, CXX = /usr/bin/x86_64-linux-gnu-g++-11",
+            "name": "qt-x86_64-debug",
+            "displayName": "Qt-Debugger with Ninja for linux-x86_64",
+            "description": "Using compilers: C = /usr/bin/gcc-13, CXX = /usr/bin/g++-13",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
             "generator": "Ninja",
             "cacheVariables": {
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
-                "CMAKE_C_COMPILER": "/usr/bin/gcc-11",
+                "CMAKE_C_COMPILER": "/usr/bin/gcc-13",
                 "CMAKE_CXX_COMPILER": "/usr/bin/g++-13",
                 "CMAKE_BUILD_TYPE": "Debug"
-            },
-            "environment": {
-                "XDG_SESSION_TYPE": " "
             }
         },
+
         {
-            "name": "lra-x86_64-release",
-            "displayName": "LRA-Releaser with Ninja for linux-x86_64",
-            "description": "Using compilers: C = /usr/bin/gcc-11, CXX = /usr/bin/x86_64-linux-gnu-g++-11",
+            "name": "qt-x86_64-release",
+            "displayName": "Qt-Releaser with Ninja for linux-x86_64",
+            "description": "Using compilers: C = /usr/bin/gcc-13, CXX = /usr/bin/g++-13",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
             "generator": "Ninja",
             "cacheVariables": {
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
-                "CMAKE_C_COMPILER": "/usr/bin/gcc-11",
+                "CMAKE_C_COMPILER": "/usr/bin/gcc-13",
                 "CMAKE_CXX_COMPILER": "/usr/bin/g++-13",
                 "CMAKE_BUILD_TYPE": "Release"
-            },
-            "environment": {
-                "XDG_SESSION_TYPE": " "
             }
         }
     ]
