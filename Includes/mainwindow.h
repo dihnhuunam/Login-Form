@@ -32,13 +32,19 @@ private:
     QLineEdit *passwordLineEdit;
     QPushButton *loginButton;
     QLabel *statusLabel;
-    QLabel *themeLabel;
     QPushButton *themeButton;
     QPropertyAnimation *usernameAnimation;
     QPropertyAnimation *passwordAnimation;
     QGraphicsOpacityEffect *usernameLabelEffect;
     QGraphicsOpacityEffect *passwordLabelEffect;
+    QGraphicsOpacityEffect *backgroundEffect;
+    QPropertyAnimation *themeAnimation;
 
+
+    bool isDarkMode = false;
+
+    void toggleTheme();
+    void updateTheme();
     void setupUiWidgets();
     void setupLayout();
     void setupStyles();

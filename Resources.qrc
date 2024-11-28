@@ -4,5 +4,9 @@
         <file>Styles/Light.qss</file>
         <file>Images/background_dark.jpg</file>
         <file>Images/background_dark.png</file>
+        <file>Images/background_light.jpg</file>
+        <file>Images/background_light.png</file>
+        <file>Images/light_icon.png</file>
+        <file>Images/dark_icon.png</file>
     </qresource>
 </RCC>

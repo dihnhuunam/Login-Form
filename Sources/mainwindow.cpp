@@ -4,6 +4,7 @@
 #include <QHBoxLayout>
 #include <QApplication>
 #include <QDebug>
+#include <QIcon>
 #include "mainwindow.h"
 
 const int CONTAINER_MIN_WIDTH = 500;
@@ -11,6 +12,10 @@ const int CONTAINER_MIN_HEIGHT = 300;
 const int ANIMATION_DURATION = 800;
 const QString successColor = "#6BBF59";
 const QString errorColor = "#FF6B6B";
+const QString lightIcon = ":/Images/light_icon.png";
+const QString darkIcon = ":/Images/dark_icon.png";
+const QString lightBackground = ":/Images/background_light.jpg";
+const QString darkBackground = ":/Images/background_dark.jpg";
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
@@ -19,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     setupStyles();
     setupAnimations();
     setupConnections();
+    updateTheme();
 }
 
 MainWindow::~MainWindow() {}
@@ -36,8 +42,9 @@ void MainWindow::setupUiWidgets()
     passwordLineEdit = new QLineEdit(container);
     loginButton = new QPushButton(container);
     statusLabel = new QLabel(container);
-    themeLabel = new QLabel(this);
     themeButton = new QPushButton(this);
+
+    // Animations
 
     // Đặt Object Name cho Qss
     container->setObjectName("container");
@@ -48,7 +55,6 @@ void MainWindow::setupUiWidgets()
     passwordLineEdit->setObjectName("passwordLineEdit");
     loginButton->setObjectName("loginButton");
     statusLabel->setObjectName("statusLabel");
-    themeLabel->setObjectName("themeLabel");
     themeButton->setObjectName("themeButton");
 }
 
@@ -71,48 +77,93 @@ void MainWindow::setupLayout()
 
     auto *mainLayout = new QVBoxLayout(centralWidget);
     mainLayout->addStretch();
-    mainLayout->addWidget(container, 0, Qt::AlignCenter);
-    mainLayout->addWidget(themeLabel, 0, Qt::AlignCenter);
     mainLayout->addWidget(themeButton, 0, Qt::AlignCenter);
+    mainLayout->addWidget(container, 0, Qt::AlignCenter);
     mainLayout->addStretch();
+}
+
+void MainWindow::updateTheme()
+{
+
+    themeAnimation->stop();
+    themeAnimation->setStartValue(1.0);
+    themeAnimation->setEndValue(0.0);
+    themeAnimation->start();
+
+    if (isDarkMode)
+    {
+        // Dark Mode
+        QFile styleFile(":/Styles/Dark.qss");
+        if (styleFile.open(QFile::ReadOnly))
+        {
+            setStyleSheet(QString::fromUtf8(styleFile.readAll()));
+            styleFile.close();
+        }
+        backgroundLabel->setPixmap(QPixmap(darkBackground));
+        QSize iconSize(28, 28);
+        themeButton->setIcon(QIcon(darkIcon));
+        themeButton->setIconSize(iconSize);
+        themeButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    }
+    else
+    {
+        // Light Mode
+        QFile styleFile(":/Styles/Light.qss");
+        if (styleFile.open(QFile::ReadOnly))
+        {
+            setStyleSheet(QString::fromUtf8(styleFile.readAll()));
+            styleFile.close();
+        }
+        backgroundLabel->setPixmap(QPixmap(lightBackground));
+        QSize iconSize(28, 28);
+        themeButton->setIcon(QIcon(lightIcon));
+        themeButton->setIconSize(iconSize);
+        themeButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    }
+
+    // Hiện ảnh nền
+    themeAnimation->setStartValue(0.0);
+    themeAnimation->setEndValue(1.0);
+    themeAnimation->start();
+
+    backgroundLabel->setScaledContents(true);
+    backgroundLabel->setGeometry(this->rect());
+    backgroundLabel->lower();
+}
+
+void MainWindow::toggleTheme()
+{
+    isDarkMode = !isDarkMode;
+    updateTheme();
 }
 
 void MainWindow::setupStyles()
 {
-    QFile styleFile(":/Styles/Dark.qss");
-    if (styleFile.open(QFile::ReadOnly))
-    {
-        QString style = QString::fromUtf8(styleFile.readAll());
-        setStyleSheet(style);
-        styleFile.close();
-    }
-
-    backgroundLabel->setPixmap(QPixmap(":/Images/background_dark.jpg"));
-    backgroundLabel->setScaledContents(true);
-    backgroundLabel->setGeometry(this->rect());
-    backgroundLabel->lower();
-
     loginLabel->setText("Đăng Nhập");
     loginLabel->setAlignment(Qt::AlignCenter);
+    loginLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     usernameLabel->setText("Tài Khoản");
     usernameLabel->setVisible(false);
+
     usernameLineEdit->setPlaceholderText("Tài Khoản");
+    usernameLineEdit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     passwordLabel->setText("Mật Khẩu");
     passwordLabel->setVisible(false);
+
     passwordLineEdit->setPlaceholderText("Mật Khẩu");
+    passwordLineEdit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     passwordLineEdit->setEchoMode(QLineEdit::Password);
 
     loginButton->setText("Đăng Nhập");
+    loginButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     statusLabel->setAlignment(Qt::AlignCenter);
     statusLabel->setVisible(false);
+    statusLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-    themeLabel->setAlignment(Qt::AlignCenter);
-    themeLabel->setText("Dark Mode");
-
-    themeButton->setText(QString::fromUtf8("Change Mode"));
+    // Đặt icon và kích thước của themeButton
 }
 
 void MainWindow::setupAnimations()
@@ -134,6 +185,15 @@ void MainWindow::setupAnimations()
     passwordAnimation = new QPropertyAnimation(passwordLabelEffect, "opacity", this);
     passwordAnimation->setDuration(500);
     passwordAnimation->setEasingCurve(QEasingCurve::InCubic);
+
+    // Tạo hiệu ứng cho chuyển giữa 2 mode
+    backgroundEffect = new QGraphicsOpacityEffect(this);
+    backgroundLabel->setGraphicsEffect(backgroundEffect);
+
+    // Tạo animation khi chuyển giữa 2 mode
+    themeAnimation = new QPropertyAnimation(backgroundEffect, "opacity", this);
+    themeAnimation->setDuration(500);
+    themeAnimation->setEasingCurve(QEasingCurve::InOutQuad);
 }
 
 // FocusIn: Nếu đã có nội dung, hiển thị label nhưng không chạy animation.
@@ -248,6 +308,7 @@ void MainWindow::setupConnections()
     connect(usernameLineEdit, &QLineEdit::returnPressed, this, &MainWindow::on_loginButton_clicked);
     connect(passwordLineEdit, &QLineEdit::returnPressed, this, &MainWindow::on_loginButton_clicked);
     connect(loginButton, &QPushButton::clicked, this, &MainWindow::on_loginButton_clicked);
+    connect(themeButton, &QPushButton::clicked, this, &MainWindow::toggleTheme); // Kết nối nút đổi theme
 
     usernameLineEdit->installEventFilter(this);
     passwordLineEdit->installEventFilter(this);

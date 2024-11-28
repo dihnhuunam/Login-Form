@@ -1,7 +1,7 @@
 /* QWidget style for container login form */
 QWidget#container {
-    background-color: rgba(240, 240, 240, 220); 
-    border: 1px solid #CCCCCC; 
+    background-color: rgba(255, 255, 255, 200); 
+    border: 1px solid rgba(200, 200, 200, 1); 
     border-radius: 15px;
 }
 
@@ -14,34 +14,20 @@ QLineEdit, QPushButton {
 
 /* QLabel style for the login label */
 QLabel#loginLabel {
-    color: #000000; 
+    color: #333333; 
     font-size: 40px;
     font-weight: bold;
 }
 
 /* QLabel style for the username and password label */
-QLabel#usernameLabel {
-    color: #333333; 
-    font-size: 25px;
-    font-weight: bold;
-}
-
-QLabel#passwordLabel {
-    color: #333333; 
+QLabel#usernameLabel, QLabel#passwordLabel {
+    color: #555555; 
     font-size: 25px;
     font-weight: bold;
 }
 
 /* QLineEdit style */
-QLineEdit#usernameLineEdit {
-    background-color: #FFFFFF; 
-    color: #333333; 
-    border: 1px solid #CCCCCC;
-    padding: 6px;
-    font-size: 18px;
-}
-
-QLineEdit#passwordLineEdit {
+QLineEdit#usernameLineEdit, QLineEdit#passwordLineEdit {
     background-color: #FFFFFF; 
     color: #333333; 
     border: 1px solid #CCCCCC; 
@@ -51,27 +37,49 @@ QLineEdit#passwordLineEdit {
 
 /* QPushButton style */
 QPushButton#loginButton {
-    background-color: #DDDDDD; 
+    background-color: #E6E6E6; 
     color: #333333; 
-    border: 1px solid #BBBBBB; 
+    border: 1px solid #CCCCCC; 
     padding: 6px;
     font-size: 18px;
 }
 
 QPushButton#loginButton:hover {
-    background-color: #BBBBBB; 
-    color: #FFFFFF; 
-    font-size: 18px;
+    background-color: #D9D9D9; 
+    color: #222222; 
 }
 
 QPushButton#loginButton:pressed {
-    background-color: #AAAAAA; 
-    font-size: 18px;
+    background-color: #CCCCCC; 
+    color: #000000; 
 }
 
 /* QLabel style for the status label */
 QLabel#statusLabel {
-    color: #333333; 
+    color: #FF0000; 
     font-size: 14px;
     font-weight: bold;
+}
+
+/* Theme Toggle Button style */
+QPushButton#themeButton {
+    border-radius: 15px;
+    min-width: 30px;
+    min-height: 30px;
+    color: #555555; 
+}
+
+QPushButton#themeButton:hover {
+    background-color: rgba(255, 255, 255, 240); 
+    color: #333333; 
+}
+
+QPushButton#themeButton:pressed {
+    background-color: #E0E0E0; 
+    color: #000000; 
+}
+
+/* General tweaks for font styling */
+QWidget, QLineEdit, QPushButton, QLabel {
+    font-family: "Arial"; 
 }
