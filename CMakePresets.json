@@ -18,7 +18,6 @@
                 "CMAKE_BUILD_TYPE": "Debug"
             }
         },
-
         {
             "name": "qt-x86_64-release",
             "displayName": "Qt-Releaser with Ninja for linux-x86_64",
