@@ -37,7 +37,7 @@ install(TARGETS ${CMAKE_PROJECT_NAME}
 install(FILES 
     ${CMAKE_CURRENT_SOURCE_DIR}/README.md
     ${CMAKE_CURRENT_SOURCE_DIR}/License.txt
-    DESTINATION share/${CMAKE_PROJECT_NAME}/doc
+    DESTINATION share
 )
 
 # CPack configuration
