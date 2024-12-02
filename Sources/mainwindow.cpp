@@ -253,7 +253,8 @@ void MainWindow::handleFocusOut(QLabel *label, QLineEdit *lineEdit, QPropertyAni
                     {
                 label->setVisible(false);
                 lineEdit->setPlaceholderText(label->text());
-                disconnect(animation, &QPropertyAnimation::finished, nullptr, nullptr); });
+                // disconnect(animation, &QPropertyAnimation::finished, nullptr, nullptr); 
+                animation->disconnect(); });
             animation->start();
         }
     }
