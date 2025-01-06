@@ -2,10 +2,6 @@ cmake_minimum_required(VERSION 3.5)
 
 project(Login-Form LANGUAGES CXX VERSION 1.0.0)
 
-set(VERSION_MAJOR 0)
-set(VERSION_MINOR 1)
-set(VERSION_PATCH 0)
-
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -15,48 +11,54 @@ list(APPEND CMAKE_PREFIX_PATH "/home/dihnhuunam/Qt5.13.2/5.13.2/gcc_64/lib/cmake
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
+set(INC_DIR "${CMAKE_SOURCE_DIR}/Includes")
+set(SRC_DIR "${CMAKE_SOURCE_DIR}/Sources")
+set(QRC "${CMAKE_SOURCE_DIR}/Resources.qrc")
+
 # Define source and header files
+file(GLOB SOURCES
+    ${SRC_DIR}/*.cpp
+)
+file(GLOB HEADERS
+    ${INC_DIR}/*.h
+)
 set(PROJECT_SOURCES
-    Sources/mainwindow.cpp
-    Includes/mainwindow.h
-    Resources.qrc 
+    ${SOURCES}
+    ${HEADERS}
+    ${QRC}
 )
 
 # Add executable
-add_library(mainLib SHARED ${PROJECT_SOURCES})
-target_link_libraries(mainLib PUBLIC Qt5::Widgets)
+add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
 
-add_executable(${CMAKE_PROJECT_NAME} Sources/main.cpp)
-target_link_libraries( ${CMAKE_PROJECT_NAME} PUBLIC mainLib)
-target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/Includes
+# Add library
+add_library(Login-Form-Libs SHARED ${PROJECT_SOURCES})
+target_link_libraries(Login-Form-Libs PUBLIC Qt5::Widgets)
+target_link_libraries(${PROJECT_NAME} PRIVATE Login-Form-Libs)
+target_include_directories(${PROJECT_NAME} PRIVATE ${INC_DIR})
+
+# Installing
+install(TARGETS ${PROJECT_NAME}
+    RUNTIME DESTINATION Bin
 )
-
-# Install targets
-install(TARGETS ${CMAKE_PROJECT_NAME}
-    RUNTIME DESTINATION bin
+install(TARGETS Login-Form-Libs
+    LIBRARY DESTINATION Libs
+    ARCHIVE DESTINATION Libs
 )
-
-install(TARGETS mainLib
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib
+install(DIRECTORY 
+    ${CMAKE_CURRENT_SOURCE_DIR}/Includes/
+    DESTINATION Includes
 )
-
-install(DIRECTORY Includes DESTINATION include)
-
 install(FILES 
     ${CMAKE_CURRENT_SOURCE_DIR}/README.md
-    ${CMAKE_CURRENT_SOURCE_DIR}/License.txt
-    DESTINATION share
+    DESTINATION Share
 )
 
 # CPack configuration
-set(CPACK_PACKAGE_DESCRIPTION "Just CPacke example")
-set(CPACK_PACKAGE_VERSION_MAJOR "${VERSION_MAJOR}")
-set(CPACK_PACKAGE_VERSION_MINOR "${VERSION_MINOR}")
-set(CPACK_PACKAGE_VERSION_PATCH "${VERSION_PATCH}")
+set(CPACK_PACKAGE_DESCRIPTION "Login Form ")
+set(CPACK_PACKAGE_VERSION "${RPOJECT_VERSION}")
 set(CPACK_PACKAGE_VENDOR "Dinh Huu Nam")
-set(CPACK_PACKAGE_CONTACT "dihnhuunam@example.com")
-set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
+set(CPACK_PACKAGE_CONTACT "dihnhuunam@gmail.com")
+set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-${PROJECT_VERSION}")
 set(CPACK_GENERATOR "ZIP")
 include(CPack)
