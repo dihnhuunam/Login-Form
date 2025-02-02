@@ -16,26 +16,17 @@ set(SRC_DIR "${CMAKE_SOURCE_DIR}/Sources")
 set(QRC "${CMAKE_SOURCE_DIR}/Resources.qrc")
 
 # Define source and header files
-file(GLOB SOURCES
-    ${SRC_DIR}/*.cpp
-)
-file(GLOB HEADERS
-    ${INC_DIR}/*.h
-)
-set(PROJECT_SOURCES
-    ${SOURCES}
-    ${HEADERS}
-    ${QRC}
-)
-
-# Add executable
-add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
+file(GLOB SOURCES ${SRC_DIR}/*.cpp)
+file(GLOB HEADERS ${INC_DIR}/*.h)
 
 # Add library
-add_library(Login-Form-Libs SHARED ${PROJECT_SOURCES})
+add_library(Login-Form-Libs SHARED ${SOURCES} ${HEADERS} ${QRC})
+target_include_directories(Login-Form-Libs PUBLIC ${INC_DIR})
 target_link_libraries(Login-Form-Libs PUBLIC Qt5::Widgets)
+
+# Add executable
+add_executable(${PROJECT_NAME} ${SOURCES})
 target_link_libraries(${PROJECT_NAME} PRIVATE Login-Form-Libs)
-target_include_directories(${PROJECT_NAME} PRIVATE ${INC_DIR})
 
 # Installing
 install(TARGETS ${PROJECT_NAME}
@@ -56,7 +47,7 @@ install(FILES
 
 # CPack configuration
 set(CPACK_PACKAGE_DESCRIPTION "Login Form ")
-set(CPACK_PACKAGE_VERSION "${RPOJECT_VERSION}")
+set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
 set(CPACK_PACKAGE_VENDOR "Dinh Huu Nam")
 set(CPACK_PACKAGE_CONTACT "dihnhuunam@gmail.com")
 set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-${PROJECT_VERSION}")
